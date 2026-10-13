@@ -71,7 +71,7 @@ export default async function Home() {
             {properties.length > 2 ? `${properties.length} homes` : "Homes"} with private hot tubs, saunas and
             mountain views, booked directly with the people who host them.
           </p>
-          <div className="rise mt-8 max-w-4xl" style={{ animationDelay: "850ms" }}>
+          <div className="fade mt-8 max-w-4xl" style={{ animationDelay: "850ms" }}>
             <SearchBar variant="hero" />
           </div>
         </div>

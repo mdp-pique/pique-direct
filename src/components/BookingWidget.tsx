@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DEFAULT_PARTY, describeParty, partyFromQuery, type Party } from "@/lib/party";
+import { GuestPicker } from "./GuestPicker";
 
 type Day = { date: string; available: boolean; price: number; minStay: number; noCheckin: boolean; noCheckout: boolean };
 type Quote = { nights: number; bookingUrl: string; lines: { label: string; amount: string; discount?: boolean }[]; total: string };
@@ -23,14 +25,14 @@ export function BookingWidget({
   const [month, setMonth] = useState(() => firstOfMonth(new Date()));
   const [checkin, setCheckin] = useState<string | null>(null);
   const [checkout, setCheckout] = useState<string | null>(null);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [pets, setPets] = useState(0);
+  const [party, setParty] = useState<Party>(DEFAULT_PARTY);
+  const [whoOpen, setWhoOpen] = useState(false);
+  const { adults, children, infants, pets } = party;
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Dates and guests from a search (?checkin=&checkout=&guests=&pets=) preselect the stay.
+  // Dates and party from a search (?checkin=&checkout=&adults=&children=&infants=&pets=) preselect the stay.
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     const ci = q.get("checkin");
@@ -41,9 +43,11 @@ export function BookingWidget({
       setCheckout(co);
       setMonth(`${ci.slice(0, 7)}-01`);
     }
-    const g = Number(q.get("guests"));
-    if (g >= 1) setAdults(Math.min(g, maxGuests));
-    if (q.get("pets") === "1" && petsAllowed) setPets(1);
+    if (q.has("adults") || q.has("guests")) {
+      const p = partyFromQuery((k) => q.get(k));
+      const adults = Math.min(p.adults, maxGuests);
+      setParty({ ...p, adults, children: Math.min(p.children, maxGuests - adults), pets: petsAllowed ? p.pets : 0 });
+    }
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [maxGuests, petsAllowed]);
 
@@ -71,7 +75,7 @@ export function BookingWidget({
     fetch("/api/quote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ propertyId, checkin, checkout, adults, children, pets }),
+      body: JSON.stringify({ propertyId, checkin, checkout, adults, children, infants, pets }),
     })
       .then(async (r) => {
         const j = await r.json();
@@ -86,7 +90,7 @@ export function BookingWidget({
     return () => {
       live = false;
     };
-  }, [propertyId, checkin, checkout, adults, children, pets]);
+  }, [propertyId, checkin, checkout, adults, children, infants, pets]);
 
   const fromPrice = useMemo(() => {
     if (!days) return null;
@@ -186,16 +190,16 @@ export function BookingWidget({
                   onClick={() => pick(date)}
                   className={`flex h-12 flex-col items-center justify-center rounded-xl text-sm transition ${
                     isEnd
-                      ? "bg-ember text-white"
+                      ? "bg-alpine text-paper"
                       : inRange
-                        ? "bg-ember/15"
+                        ? "bg-alpine/10"
                         : open
                           ? "hover:bg-paper-2"
                           : "text-muted line-through opacity-50"
                   }`}
                 >
                   <span>{Number(date.slice(8))}</span>
-                  {open && d && <span className={`text-[10px] ${isEnd ? "text-white/80" : "text-muted"}`}>{money(d.price)}</span>}
+                  {open && d && <span className={`text-[10px] ${isEnd ? "text-paper/80" : "text-muted"}`}>{money(d.price)}</span>}
                 </button>
               );
             })}
@@ -204,10 +208,24 @@ export function BookingWidget({
         </div>
       )}
 
-      <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
-        <Counter label="Adults" value={adults} min={1} max={maxGuests - children} onChange={setAdults} />
-        <Counter label="Children" value={children} min={0} max={maxGuests - adults} onChange={setChildren} />
-        {petsAllowed && <Counter label="Pets" value={pets} min={0} max={4} onChange={setPets} />}
+      <div className="mt-4 rounded-2xl border border-line">
+        <button
+          type="button"
+          aria-expanded={whoOpen}
+          onClick={() => setWhoOpen((o) => !o)}
+          className="flex w-full items-center justify-between px-4 py-3 text-left"
+        >
+          <span>
+            <span className="block text-xs font-semibold">Who</span>
+            <span className="block text-sm text-ink-soft">{describeParty(party)}</span>
+          </span>
+          <span className={`text-muted transition ${whoOpen ? "rotate-180" : ""}`}>⌄</span>
+        </button>
+        {whoOpen && (
+          <div className="border-t border-line px-4 pb-3">
+            <GuestPicker party={party} onChange={setParty} maxGuests={maxGuests} petsAllowed={petsAllowed} />
+          </div>
+        )}
       </div>
 
       {quoteError && <p className="mt-4 text-sm text-ember-2">{quoteError}</p>}
@@ -240,35 +258,6 @@ export function BookingWidget({
         </p>
       )}
       <p className="mt-3 text-center text-xs text-muted">Secure checkout by Stripe. No platform service fee.</p>
-    </div>
-  );
-}
-
-function Counter({
-  label,
-  value,
-  min,
-  max,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  onChange: (n: number) => void;
-}) {
-  return (
-    <div className="rounded-xl border border-line px-2 py-2 text-center">
-      <p className="text-[11px] uppercase tracking-wider text-muted">{label}</p>
-      <div className="mt-1 flex items-center justify-between">
-        <button type="button" aria-label={`Fewer ${label}`} disabled={value <= min} onClick={() => onChange(value - 1)} className="h-6 w-6 rounded-full disabled:opacity-30">
-          −
-        </button>
-        <span className="font-medium">{value}</span>
-        <button type="button" aria-label={`More ${label}`} disabled={value >= max} onClick={() => onChange(value + 1)} className="h-6 w-6 rounded-full disabled:opacity-30">
-          +
-        </button>
-      </div>
     </div>
   );
 }

@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     checkout?: string;
     adults?: number;
     children?: number;
+    infants?: number;
     pets?: number;
   } | null;
   if (!body?.propertyId || !DATE.test(body.checkin ?? "") || !DATE.test(body.checkout ?? "")) {
@@ -32,13 +33,14 @@ export async function POST(req: Request) {
   if (adults + children > property.guests) {
     return NextResponse.json({ error: `This home sleeps up to ${property.guests}.` }, { status: 400 });
   }
+  const infants = clamp(body.infants, 0, 4);
   const pets = property.petsAllowed ? clamp(body.pets, 0, 4) : 0;
 
   try {
     const q = await createQuote(property.id, {
       checkin_date: body.checkin!,
       checkout_date: body.checkout!,
-      guests: { adults, children, pets },
+      guests: { adults, children, infants, pets },
     });
     const f = q.financials;
     return NextResponse.json({

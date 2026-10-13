@@ -88,6 +88,10 @@ body {
   from { opacity: 0; transform: translate3d(0, 0.6em, 0); filter: blur(6px); }
   to { opacity: 1; transform: none; filter: none; }
 }
+/* Opacity only: no transform/filter, so fixed-position children (the phone search sheet) stay tied to the screen. */
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.fade { animation: fade 0.8s ease-out both; }
+
 .rise { animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 @keyframes marquee {

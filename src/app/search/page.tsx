@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PropertyCard } from "@/components/PropertyCard";
 import { Reveal } from "@/components/Reveal";
 import { SearchBar } from "@/components/SearchBar";
+import { describeParty, partyFromQuery, partyToQuery } from "@/lib/party";
 import { hasHospitableToken } from "@/lib/hospitable/client";
 import { checkStay, getProperties, getYearCalendar, mapLimit, type PublicProperty } from "@/lib/properties";
 import { CITIES, cityFromName } from "@/lib/site";
@@ -12,13 +13,15 @@ export const metadata: Metadata = { title: "Search stays", robots: { index: fals
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
-type Search = { city?: string; checkin?: string; checkout?: string; guests?: string; pets?: string };
+type Search = Record<string, string | undefined>;
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<Search> }) {
   const sp = await searchParams;
   const city = cityFromName(sp.city);
-  const guests = Math.min(Math.max(Number(sp.guests) || 1, 1), 30);
-  const pets = sp.pets === "1";
+  const party = partyFromQuery((k) => sp[k]);
+  // Infants don't count toward a home's guest limit.
+  const guests = party.adults + party.children;
+  const pets = party.pets > 0;
   const hasDates = DATE.test(sp.checkin ?? "") && DATE.test(sp.checkout ?? "") && sp.checkout! > sp.checkin!;
   const checkin = hasDates ? sp.checkin! : undefined;
   const checkout = hasDates ? sp.checkout! : undefined;
@@ -41,11 +44,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     results = open.sort((a, b) => a.nightly - b.nightly);
   }
 
-  const query = new URLSearchParams({
-    ...(checkin && checkout ? { checkin, checkout } : {}),
-    guests: String(guests),
-    ...(pets ? { pets: "1" } : {}),
-  }).toString();
+  const query = partyToQuery(party, new URLSearchParams(checkin && checkout ? { checkin, checkout } : {})).toString();
   const money = (cents: number, currency: string) =>
     new Intl.NumberFormat("en-CA", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
   const where = city ? CITIES[city].name : "all our cities";
@@ -53,13 +52,12 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-7xl px-4 pt-28 sm:px-6">
-      <SearchBar initial={{ city: city ?? "", checkin, checkout, guests, pets }} />
+      <SearchBar initial={{ city: city ?? "", checkin, checkout, party }} />
       <h1 className="font-display mt-12 text-4xl font-medium sm:text-5xl">
         {results.length} {results.length === 1 ? "home" : "homes"} {liveChecked ? "available" : ""} in {where}
       </h1>
       <p className="mt-2 text-ink-soft">
-        For {guests} {guests === 1 ? "guest" : "guests"}
-        {pets ? " with pets" : ""}
+        For {describeParty(party)}
         {when}.{!hasDates && " Add dates to see only the homes that are free, with prices."}
       </p>
 
