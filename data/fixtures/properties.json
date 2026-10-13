@@ -1,0 +1,104 @@
+{
+  "_note": "Real public fields for two Pique properties, captured 2026-10-13 from Hospitable. Used only when HOSPITABLE_API_TOKEN is not set (local work and previews before the token exists).",
+  "properties": [
+    {
+      "property": {
+        "id": "f67b9dbc-a17d-4355-99c6-25bf1b232964",
+        "name": "NEW #131 Grande Rockies Resort",
+        "public_name": "NEW #131 Grande Rockies Resort",
+        "picture": "https://assets.hospitable.com/property_images/2339637/VT59JM0qyaHVhoQkrEq16bqDdCG9EbRmlXHIESr3.jpg",
+        "address": { "city": "Canmore", "state": "AB", "country": "CA", "country_name": "Canada", "coordinates": { "latitude": "51.0911431", "longitude": "-115.348167" } },
+        "listed": true,
+        "currency": "CAD",
+        "summary": "Relax and Unwind to our Charming Mountain Escape in the Heart of Canmore!\n\nWhat We Offer:\n✔ Perfect Suite for Couples Seeking Luxury & Relaxation\n✔ Sleeps Up to 4 Guests - Great for Families! \n✔ King Bed in Primary Bedroom\n✔ Heated Indoor Pool & HotTub\n✔ Patio & BBQ\n✔ A/C & Gas Fireplace\n✔Fast WiFi & Netflix\n✔ In-Suite Laundry\n✔ Heated U/G Parking\n✔ Workout Gym\n✔ 8 Min Walk to Downtown Canmore\n✔ Top Canmore Restaurant in Resort\n\nIdeal for weekend escapes or extended stays. Book your getaway now!",
+        "description": "★ Just a quick note 😊 By booking, you're confirming that you've read and agreed to our \"Additional House Rules\" and \"Other Things to Note\".\n\nWelcome to Grande Rockies Resort in the heart of Canmore — where the Canadian Rockies are your backyard and downtown is a short walk away. Step onto your private balcony and breathe in the mountain air while your morning coffee brews. Whether you're here for a charming escape, a longer work-from-home retreat, or a special occasion, this beautifully styled condo delivers the perfect blend of luxury, location, and laid-back Rocky Mountain charm.\n\nExplore the trails, cafés, wine bars, and boutiques of downtown Canmore — all within a 10-minute walk — then come back to unwind by the fireplace or soak in the resort's indoor hot tub.\n\n✅ WHAT GUESTS LOVE ABOUT OUR LISTING\n· Professionally styled with cozy textures and thoughtful Rocky Mountain design\n· Luxurious king bed for dreamy sleeps after long hikes or charming dinners\n· Private balcony with BBQ — perfect for morning coffee or sunset wine\n· Gas fireplace to curl up beside after a day in the mountains\n· Newly renovated spa-inspired bathroom\n· Smart TV with Netflix in both the living area and bedroom\n· In-suite laundry, A/C, and fast WiFi — ideal for longer stays\n· Secure heated underground parking included\n· Full resort amenities: indoor heated pool, hot tub, waterslide & fitness centre\n· On-site dining at Grande Kitchen + Bar\n\n🏠 HOME LAYOUT\nA beautifully designed resort condo at Grande Rockies Resort featuring a living area with sofa bed, full kitchen, gas fireplace, private balcony with BBQ, spa-inspired bathroom, and a king bedroom with Smart TV.\n\n🔍 IMPORTANT NOTES & POLICIES — PLEASE READ BEFORE BOOKING\n\n- (trimmed in this sample)",
+        "checkin": "16:00",
+        "checkout": "11:00",
+        "amenities": ["ac","bbq","coffee_maker","crib","dishwasher","dryer","elevator","fireplace","free_on_premise_parking","gym","high_chair","jacuzzi","kitchen","laptop_friendly_workspace","long_term_stays_allowed","patio","pool","resort_access","room_darkening_shades","tv","washer","wifi"],
+        "capacity": { "max": 4, "bedrooms": 1, "beds": 2, "bathrooms": 1 },
+        "room_details": [
+          { "type": "bedroom", "beds": [{ "type": "king_bed", "quantity": 1 }] },
+          { "type": "living_room", "beds": [{ "type": "sofa_bed", "quantity": 1 }] }
+        ],
+        "property_type": "condominium",
+        "room_type": "Entire Home",
+        "tags": ["canmore"],
+        "house_rules": { "pets_allowed": false, "smoking_allowed": false, "events_allowed": false, "children_allowed": true, "infants_allowed": true }
+      },
+      "images": [
+        { "url": "https://assets.hospitable.com/property_images/2339637/zqXtxyPgkMtKjBvC5EAHLvjOVoB9zQZbGeHbD7jt.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/VT59JM0qyaHVhoQkrEq16bqDdCG9EbRmlXHIESr3.jpg", "caption": "", "order": 0 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/nDxSGH7BfPQWlq9sGNZnXs1L9EukU6YAOFZTOx8N.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/4LG4zeUsD8PirmBLoRNAtlxFpq0PN3uzcyL4vrPR.jpg", "caption": "", "order": 1 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/1SUeKws7x49JaNvI07ojXDZloCj3xrMIKHn4qk8A.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/1yBvymsTxYkdmFNPbpw37l95tNEf8kGssJ4gMSDG.jpg", "caption": "", "order": 2 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/VfFAw6MzMohU4F2kOcB1ICCQkwe9SUmgeYh38nu2.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/TT7SxoHk7SR17Jy1cHyMRX4Pa484URjFfyzW7lnd.jpg", "caption": "", "order": 3 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/dQKHKkBVIYiEMaV3rRwWLgTk4HPOIsqYB3maChCM.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/Faqc35u3l3ukWMvlpH2nxgThA1CfWOLzIxoyQHZw.jpg", "caption": "", "order": 4 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/CUZxufUcf8OZ62jvUHMBAmwErD2fTbmVlgAZbYCh.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/m5sv6UBRONdKe0dP7udcAOZP7RdaVWGKvZkFrpTm.jpg", "caption": "", "order": 5 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/LojtO4JIM7WtsqUlM181iw5hxfLMyMS7OHoQOwRk.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/CaBedD2D22ctK9kg9D1ydYkS1f2jLabA2zJtRL0J.jpg", "caption": "", "order": 6 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/1EGFiX067uQ1stmW1QZkE1yD8V8a1UNUW9sXqVU7.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/fijwB1Gaktp0VBamLDkGdfZyBTH7aCd1U71txh2q.jpg", "caption": "", "order": 7 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/xePTBbsD1VHA0xsTLQrSCFxRERS75T4qKaCKHM07.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/Bi5ijJqxheMnuQhFMkN0iVYC1styYoLXWzhX0gyb.jpg", "caption": "", "order": 8 },
+        { "url": "https://assets.hospitable.com/property_images/2339637/Ywxzj1AUAyvUJlpY4s8oPhXCPV5DiJ0F87OBOwI6.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/2339637/F2tfrbiPeqRk0nyzfeBlvoqONyhrsk53VLtamAPR.jpg", "caption": "", "order": 9 }
+      ],
+      "reviews": {
+        "total": 10,
+        "reviews": [
+          { "id": "968f5ca9-840f-4be6-8cdb-584234bfcb66", "platform": "airbnb", "public": { "rating": 5, "review": "The accommodation enjoys excellent accessibility with convenient transport links. All facilities are complete and well-prepared. Both check-in and check-out processes were fast, smooth and hassle-free.", "response": null }, "reviewed_at": "2026-10-03T22:15:18+00:00" },
+          { "id": "05f40bac-a3f2-4ba3-88c3-89d3e56ef471", "platform": "airbnb", "public": { "rating": 5, "review": "Michael and Katrina were great hosts and the place was fully equipped and nicely furnished.", "response": null }, "reviewed_at": "2026-09-30T01:20:52+00:00" },
+          { "id": "c678ee78-6e12-4791-bd5c-dd9835b8fce6", "platform": "airbnb", "public": { "rating": 5, "review": "Thanks for a great stay!", "response": null }, "reviewed_at": "2026-09-24T16:48:37+00:00" },
+          { "id": "4a39e2aa-3acb-4260-98a4-81cff30d043e", "platform": "airbnb", "public": { "rating": 5, "review": "Very clean accommodation and quick communication. Convenient access to downtown about 15 mins. We did not use the little waterpark but looks like it would be fun for young kids, or good for adults to have a soak in the hot tub. We did hear sounds from surrounding units, but it wasn’t bothersome or too late at night. Thank you!", "response": null }, "reviewed_at": "2026-09-16T16:56:31+00:00" },
+          { "id": "2a3c716b-b2d5-433f-a93f-a7f82b6b5662", "platform": "booking", "public": { "rating": 3, "review": "The place was really great, it was the perfect size, easy to find, easy to access the door code, parking, pool/hot tub etc. was all great! The pull out sofa took us over an hour to figure out how to get it out.", "response": null }, "reviewed_at": "2026-08-31T20:16:22+00:00" }
+        ]
+      }
+    },
+    {
+      "property": {
+        "id": "898ea0ff-f0a5-4d8c-a9bd-a17d772e6e3a",
+        "name": "Griesbach House 2.0*",
+        "public_name": "Nordic Spa Retreat - Hot Tub - King Bed- Firepit - BBQ!",
+        "picture": "https://assets.hospitable.com/property_images/1168776/thumb-QmO7qfJHIRoN5eYiWC5pOtuTS4yz5KwngUSDKMFk.png",
+        "address": { "city": "Edmonton", "state": "AB", "country": "CA", "country_name": "Canada", "coordinates": { "latitude": "53.60740210", "longitude": "-113.49318940" } },
+        "listed": true,
+        "currency": "CAD",
+        "summary": "Your Nordic Spa-Inspired Escape—Perfect for Families & Local Staycations!\n\nWhat we offer:\n✔ Private 6-Person Hot Tub\n✔ Canadian Cedar 6 to 8-Person Wood Burning Barrel Sauna\n✔ Patio w/ Fire Table + BBQ\n✔ Fireplace + AC\n✔ Fire Pit\n✔ Foosball Table\n✔ Family Friendly: PacknPlay+High Chair\n✔ Pet Friendly–$30/night/pet \n✔ Great for Longer Stays\n✔ Stocked Kitchen\n✔ In-Suite Laundry\n✔ Fast WiFi\n✔ Secure 2-Car Garage\n✔ Walking Trails Nearby\n✔ 10 Mins to DT \n\nBook your Nordic-style retreat today!",
+        "description": "★ Just a quick note 😊 By booking, you're confirming that you've read and agreed to our \"Additional House Rules\" and \"Other Things to Note\".\n\nWelcome yourself inside this beautifully designed 5-bed, 2-bath Nordic spa-inspired retreat nestled in Edmonton's charming Griesbach neighbourhood — just 10 minutes from Downtown and steps from scenic walking trails. With a private hot tub, gas fireplace, and a spacious layout that sleeps up to 11, this home is your ultimate escape to unplug, reconnect, and recharge.\n\nSoak in the private 6-person hot tub under the open sky, gather around the fire table or fire pit on the patio, or cozy up by the gas fireplace after a long day. With fast WiFi, 3 Smart TVs, a foosball table, and a fully stocked kitchen, this home has everything your group needs to relax and have fun.\n\n✅ WHAT GUESTS LOVE ABOUT OUR LISTING\n‣ Private 6-person hot tub — the ultimate way to unwind after a day of exploring\n‣ Private 6 to 8 -person wood burning barrel sauna\n‣ Spacious 5-bedroom layout sleeping up to 11 — perfect for large groups & families\n‣ Gas fireplace, patio with fire table & fire pit for cozy indoor/outdoor evenings\n‣ Secure 2-car garage + driveway parking for stress-free arrivals\n‣ Pet-friendly home with prior approval — bring the whole family!\n‣ Only 10 minutes to Downtown Edmonton with walking trails right nearby\n\nOur dedicated guest support team is available anytime should you need anything—from extra amenities to local recommendations. Simply message us through the Airbnb app and we’ll respond promptly to ensure everything is perfect.\n\nGriesbach is one of Edmonton’s most beautifully master-planned and award-winning communities—offering the perfect mix of nature, history, and upscale convenience.\n\n🔎 IMPORTANT NOTES & POLICIES - PLEASE READ BEFORE BOOKING\n\n- (trimmed in this sample)",
+        "checkin": "16:00",
+        "checkout": "10:00",
+        "amenities": ["ac","bbq_area","board_games","dishwasher","dryer","fireplace","fire_pit","free_parking","garden_or_backyard","high_chair","jacuzzi","kitchen","laptop_friendly_workspace","long_term_stays_allowed","pack_n_play_travel_crib","patio","room_darkening_shades","sauna","tv","washer","wireless_internet"],
+        "capacity": { "max": 11, "bedrooms": 5, "beds": 6, "bathrooms": 2 },
+        "room_details": [
+          { "type": "bedroom", "beds": [{ "type": "king_bed", "quantity": 1 }] },
+          { "type": "bedroom", "beds": [{ "type": "queen_bed", "quantity": 1 }] },
+          { "type": "bedroom", "beds": [{ "type": "double_bed", "quantity": 1 }] },
+          { "type": "bedroom", "beds": [{ "type": "double_bed", "quantity": 1 }] },
+          { "type": "bedroom", "beds": [{ "type": "queen_bed", "quantity": 1 }] },
+          { "type": "living_room", "beds": [{ "type": "sofa_bed", "quantity": 1 }] }
+        ],
+        "property_type": "house",
+        "room_type": "Entire Home",
+        "tags": ["edmonton", "Hot tub"],
+        "house_rules": { "pets_allowed": true, "smoking_allowed": false, "events_allowed": false, "children_allowed": true, "infants_allowed": true }
+      },
+      "images": [
+        { "url": "https://assets.hospitable.com/property_images/1168776/QmO7qfJHIRoN5eYiWC5pOtuTS4yz5KwngUSDKMFk.png", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/thumb-QmO7qfJHIRoN5eYiWC5pOtuTS4yz5KwngUSDKMFk.png", "caption": "Relax under the stars with a private hot tub, sauna, and glowing backyard oasis", "order": 0 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/qTQV80XoDWeU2JJxAmOVCECURniFoOaiNvWwHmRb.png", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/thumb-qTQV80XoDWeU2JJxAmOVCECURniFoOaiNvWwHmRb.png", "caption": "Cozy backyard retreat with gazebo, fire table, hot tub & sauna", "order": 1 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/eQYuKl5mKCPswxgvaNyuPzPR8zwYxOiVPLMIWxbN.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/DK8sfSbhxkM3byenuqXddy2jT201i0uvgdQhKT1v.jpg", "caption": "Step into serenity—your spa-inspired stay begins the moment you enter this professionally designed living room with cozy seating and soft natural light.", "order": 2 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/0mJFCP6bcrQqOBnJu6YedhPY7BEOa2VWPAgrBZJX.png", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/thumb-0mJFCP6bcrQqOBnJu6YedhPY7BEOa2VWPAgrBZJX.png", "caption": "Cozy backyard fire pit with string lights and vibrant Adirondack seating", "order": 3 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/nEMZlKW4tIhetyv57ONtuOflF6aQIigLfwxzaUbk.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/c8oJ49MX5L070XNaCv5huKrt3TTv9SrfKxAvOzGN.jpg", "caption": "Retreat to your spacious king bedroom—styled with cozy textures, rich tones, and blackout curtains for the perfect night's sleep.", "order": 4 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/YZoU0Z2h8loUkMEyUQ17DIJ857IzyQSPXvuuxN2r.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/l7vledof9jTD3Xsgut7Qvl30DuXQTR14fFF4m5OV.jpg", "caption": "Arrive home to warm lighting and charming curb appeal.", "order": 5 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/rsD4eDLYprtWLmNXDvaGPbbGAl0L2aJdfMYFl0D9.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/ErR0zUHBvqmkQv1GB3aiCjiCrnRQCj84qdxfICL5.jpg", "caption": "**Laptop Screen\n1. Open phone camera and point it towards the QR on laptop screen.", "order": 6 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/2ncwNBvLGCe7H9Ih9JyGh7wLlHmu8UHu6iLSDNBH.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/z25nnfwILiBxeyV6KgpczXJuKbqIidZ7WhpbQD42.jpg", "caption": "A custom bookshelf feature wall adds a bold design statement and a touch of curated charm.", "order": 8 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/ezK3ARq4r1h5XkcTl127kk66tf00yp1qT1iYfSsk.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/LuqwGVd6E00Vdh69B25bF7JhzNsEruP4d5jQE7w7.jpg", "caption": "Gather around the dining table, perfect for shared meals, celebrations, or game nights with the whole group.", "order": 9 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/3uXpquXi3TGxLBa1YCCkPGoVc4dwfFvZTvxMdXZ0.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/RgTk5eYWfiPZIl2gun1Gx1QBo7MImU5clZO6rrHe.jpg", "caption": "Bright, clean, and fully stocked—this modern kitchen is equipped with everything you need.", "order": 25 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/gc22upGyPbzYQowjDd712o7gfhJ0TmMJUV9KEIfE.png", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/thumb-gc22upGyPbzYQowjDd712o7gfhJ0TmMJUV9KEIfE.png", "caption": "Private cedar sauna with rustic charm and a relaxing spa-like feel", "order": 41 },
+        { "url": "https://assets.hospitable.com/property_images/1168776/0eSTwoGXwJV6pdFRZFPNogFB654CHmsHxFoqUok9.jpg", "thumbnail_url": "https://assets.hospitable.com/property_images/1168776/DO1He0XlzNuTXFFB5mDBHLYBkblSwotgHOJXUdi0.jpg", "caption": "From game night to movie night, this cozy lower-level lounge features a gas fireplace and foosball table.", "order": 57 }
+      ],
+      "reviews": {
+        "total": 197,
+        "reviews": [
+          { "id": "b23f6b13-8e7d-42ee-a525-8a103d2b8457", "platform": "airbnb", "public": { "rating": 5, "review": "Beautiful home in a nice quiet street not far from anything felt spacious and clean wood stay again", "response": null }, "reviewed_at": "2026-09-30T20:29:31+00:00" },
+          { "id": "67999ea8-49e9-4ee7-b2bf-13271fcb2744", "platform": "airbnb", "public": { "rating": 5, "review": "The house was well appointed. The living area is a little small for the number of the bedrooms however it was easy to make it work. The back garden is small but well set up and useable. It was a great place for the family.", "response": null }, "reviewed_at": "2026-09-29T03:25:10+00:00" },
+          { "id": "6282cf6c-745b-4300-a793-8da68e91cb5f", "platform": "airbnb", "public": { "rating": 5, "review": "Beautiful space great for the fam", "response": null }, "reviewed_at": "2026-09-28T16:02:31+00:00" },
+          { "id": "48232cbe-568c-4187-b2c6-3988da0dfd49", "platform": "airbnb", "public": { "rating": 5, "review": "Enjoyed the hot tub!", "response": null }, "reviewed_at": "2026-09-21T00:08:32+00:00" }
+        ]
+      }
+    }
+  ]
+}
