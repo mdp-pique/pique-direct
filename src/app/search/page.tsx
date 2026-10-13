@@ -50,8 +50,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const keepQuery = new URLSearchParams({ ...(type ? { type } : {}), ...(amen.size ? { amen: [...amen].join(",") } : {}) }).toString();
 
   const query = partyToQuery(party, new URLSearchParams(checkin && checkout ? { checkin, checkout } : {})).toString();
-  const money = (cents: number, currency: string) =>
-    new Intl.NumberFormat("en-CA", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
   const where = city ? CITIES[city].name : "all our cities";
   const when = checkin && checkout ? ` from ${fmt(checkin)} to ${fmt(checkout)}` : "";
 
@@ -105,17 +103,12 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         </div>
       ) : (
         <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {results.map(({ p, nightly, nights }, i) => (
+          {results.map(({ p }, i) => (
             <Reveal key={p.id} delay={(i % 3) * 80}>
               <PropertyCard
                 p={p}
                 priority={i < 3}
                 query={query}
-                price={
-                  nightly && nights
-                    ? { perNight: money(nightly / nights, p.currency), total: money(nightly, p.currency), nights }
-                    : undefined
-                }
               />
             </Reveal>
           ))}

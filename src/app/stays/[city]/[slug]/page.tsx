@@ -225,7 +225,7 @@ export default async function PropertyPage({ params }: Params) {
         </div>
 
         <aside id="book" className="scroll-mt-20 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:self-start lg:overflow-y-auto">
-          <BookingWidget propertyId={p.id} maxGuests={p.guests} petsAllowed={p.petsAllowed} currency={p.currency} />
+          <BookingWidget propertyId={p.id} maxGuests={p.guests} petsAllowed={p.petsAllowed} />
         </aside>
       </div>
 

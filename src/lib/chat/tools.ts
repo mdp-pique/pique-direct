@@ -19,7 +19,7 @@ export const TOOLS: Anthropic.Beta.BetaTool[] = [
   {
     name: "search_homes",
     description:
-      "Find homes. With checkin and checkout, returns only homes free for the whole stay, cheapest first, with the nightly rate before fees and taxes. Returns up to 8.",
+      "Find homes. With checkin and checkout, returns only homes free for the whole stay. Returns up to 8. Has no prices: use price_stay for those.",
     strict: true,
     input_schema: {
       type: "object",
@@ -105,7 +105,7 @@ export async function runTool(name: string, input: Record<string, unknown>, ctx:
         type,
         amenities,
       });
-      const homes = results.slice(0, 8).map(({ p, nightly, nights }) => {
+      const homes = results.slice(0, 8).map(({ p }) => {
         ctx.linkedHomes.add(propertyHref(p));
         return {
           name: p.title,
@@ -116,12 +116,12 @@ export async function runTool(name: string, input: Record<string, unknown>, ctx:
           bedrooms: p.bedrooms,
           pet_friendly: p.petsAllowed,
           highlights: uniqueAmenities(p.amenities).slice(0, 8),
-          ...(nightly && nights ? { avg_nightly_before_fees: money(nightly / nights), nights } : {}),
         };
       });
       return JSON.stringify({
         availability_checked: liveChecked,
         total_matches: results.length,
+        prices: "Not included. Call price_stay for the real direct-booking price before naming any amount.",
         homes,
         ...(!liveChecked && checkin ? { note: "Live availability unavailable; don't promise these are free." } : {}),
       });
@@ -199,8 +199,4 @@ function partyOf(input: Record<string, unknown>): Party {
 
 function str(v: unknown) {
   return typeof v === "string" && v.trim() ? v.trim() : undefined;
-}
-
-function money(cents: number) {
-  return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 }).format(cents / 100);
 }

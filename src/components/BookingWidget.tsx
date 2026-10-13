@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { DEFAULT_PARTY, describeParty, partyFromQuery, type Party } from "@/lib/party";
 import { GuestPicker } from "./GuestPicker";
 import { formatRange } from "./RangeCalendar";
@@ -14,12 +14,10 @@ export function BookingWidget({
   propertyId,
   maxGuests,
   petsAllowed,
-  currency,
 }: {
   propertyId: string;
   maxGuests: number;
   petsAllowed: boolean;
-  currency: string;
 }) {
   const [days, setDays] = useState<Map<string, Day> | null>(null);
   const [calendarError, setCalendarError] = useState<string | null>(null);
@@ -96,12 +94,6 @@ export function BookingWidget({
     };
   }, [propertyId, checkin, checkout, adults, children, infants, pets]);
 
-  const fromPrice = useMemo(() => {
-    if (!days) return null;
-    const prices = [...days.values()].filter((d) => d.available).slice(0, 60).map((d) => d.price);
-    return prices.length ? Math.min(...prices) : null;
-  }, [days]);
-
   function pick(date: string) {
     const d = days?.get(date);
     if (!checkin || checkout || date <= checkin) {
@@ -133,15 +125,15 @@ export function BookingWidget({
   }
 
   const today = isoDate(new Date());
-  const money = (cents: number) =>
-    new Intl.NumberFormat("en-CA", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
 
   return (
     <div className="rounded-3xl border border-line bg-card p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.25)] sm:p-6">
       <p className="font-display text-2xl">
-        {fromPrice ? (
+        {/* Only Hospitable's direct quote is a real price: the calendar's nightly
+            amounts are the Airbnb listing rates, so they're never shown. */}
+        {quote ? (
           <>
-            From {money(fromPrice)} <span className="text-base text-ink-soft">/ night</span>
+            {quote.total} <span className="text-base text-ink-soft">total</span>
           </>
         ) : (
           "Check dates & price"
@@ -216,7 +208,6 @@ export function BookingWidget({
                   }`}
                 >
                   <span>{Number(date.slice(8))}</span>
-                  {open && d && <span className={`text-[10px] ${isEnd ? "text-paper/80" : "text-muted"}`}>{money(d.price)}</span>}
                 </button>
               );
             })}

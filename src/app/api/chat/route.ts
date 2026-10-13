@@ -165,6 +165,10 @@ export async function POST(req: Request) {
     reply = "Sorry, I couldn't finish that one. Could you ask it a different way, or call or text the team?";
     ctx.contact ??= { text: "Hi, I have a question about a stay." };
   }
+  // A reply that tells the guest to call or text always comes with the buttons.
+  if (!ctx.contact && /\b(call|text)\b[^.]{0,40}\b(team|us|buttons?)\b|\bbuttons? below\b/i.test(reply)) {
+    ctx.contact = { text: "Hi, I have a question about a stay." };
+  }
   // Only links to our own pages survive; anything else the model wrote stays plain text.
   reply = keepOwnLinks(reply);
 

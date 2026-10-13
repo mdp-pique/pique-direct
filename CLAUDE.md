@@ -8,6 +8,7 @@ Direct booking site for Pique Properties (Edmonton, Canmore, Calgary). Next.js A
 - Without a token the site renders the two sample properties in `data/fixtures/properties.json` (real public fields only).
 
 ## Rules
+- **Prices only from the direct quote.** Hospitable's calendar endpoint returns the Airbnb listing's nightly rates (provider `airbnb-official`), not Hospitable Direct's: on 10-13 a direct quote was ~22% above the calendar rate. Never show calendar `price` to guests; use it for availability only. Every amount on the site or in Ask Pique comes from `priceStay()`.
 - **Public fields only.** `toPublicProperty()` in `src/lib/properties.ts` is an allowlist. Hospitable's property payload also carries the house manual (building, pool, garage and door codes), wifi and streaming logins and the iCal feed; never request `include=details` and never pass a raw Hospitable object to a page, route, sitemap, llms.txt or JSON-LD. Reviews: only `public` text and rating, never `private` feedback. Coordinates are rounded to ~1 km; no street address.
 - Listing text was written for Airbnb; `cleanDescription()` drops the policies block and platform mentions until rewritten copy exists.
 - Property URLs end in the first 8 characters of the Hospitable id; a renamed listing 308-redirects to its new slug. Don't change the slug format without redirects.
