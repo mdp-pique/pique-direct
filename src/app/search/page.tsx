@@ -4,9 +4,9 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { Reveal } from "@/components/Reveal";
 import { SearchBar } from "@/components/SearchBar";
 import { describeParty, partyFromQuery, partyToQuery } from "@/lib/party";
-import { hasHospitableToken } from "@/lib/hospitable/client";
+import { searchHomes } from "@/lib/search";
 import { AMENITY_FILTERS, SPACE_ORDER } from "@/lib/filters";
-import { SPACE_TYPES, checkStay, getProperties, getYearCalendar, mapLimit, type PublicProperty, type SpaceType } from "@/lib/properties";
+import { SPACE_TYPES, type PublicProperty, type SpaceType } from "@/lib/properties";
 import { CITIES, cityFromName } from "@/lib/site";
 
 // Results depend on the query; keep them out of the index (city pages are the indexable version).
@@ -20,39 +20,17 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const sp = await searchParams;
   const city = cityFromName(sp.city);
   const party = partyFromQuery((k) => sp[k]);
-  // Infants don't count toward a home's guest limit.
-  const guests = party.adults + party.children;
-  const pets = party.pets > 0;
   const hasDates = DATE.test(sp.checkin ?? "") && DATE.test(sp.checkout ?? "") && sp.checkout! > sp.checkin!;
   const checkin = hasDates ? sp.checkin! : undefined;
   const checkout = hasDates ? sp.checkout! : undefined;
-
-  const candidates = (await getProperties()).filter(
-    (p) => (!city || p.city === city) && p.guests >= guests && (!pets || p.petsAllowed),
-  );
 
   const type = (SPACE_ORDER as string[]).includes(sp.type ?? "") ? (sp.type as SpaceType) : null;
   const amen = new Set((sp.amen ?? "").split(",").filter((a) => AMENITY_FILTERS.some((f) => f.slug === a)));
   const amenLabels = AMENITY_FILTERS.filter((f) => amen.has(f.slug)).map((f) => f.label as string);
 
-  let results: { p: PublicProperty; nightly?: number; nights?: number }[] = candidates.map((p) => ({ p }));
-  let liveChecked = false;
-  if (hasDates && hasHospitableToken()) {
-    liveChecked = true;
-    // Calendars are cached for 5 minutes; a cold search reads them 10 at a time.
-    const open: { p: PublicProperty; nightly: number; nights: number }[] = [];
-    await mapLimit(candidates, 10, async (p) => {
-      const days = await getYearCalendar(p.id).catch(() => null);
-      const stay = days ? checkStay(days, checkin!, checkout!) : null;
-      if (stay?.ok) open.push({ p, nightly: stay.nightly, nights: stay.nights });
-    });
-    results = open.sort((a, b) => a.nightly - b.nightly);
-  }
-
-  // Chip counts come from the homes that fit the dates and party, before type/amenity filters.
-  const base = results;
+  // Chip counts come from `base`: the homes that fit the dates and party, before type/amenity filters.
+  const { base, results, liveChecked } = await searchHomes({ city, checkin, checkout, party, type, amenities: amenLabels });
   const hasAll = (p: PublicProperty, labels: string[]) => labels.every((l) => p.amenities.includes(l));
-  results = base.filter(({ p }) => (!type || p.spaceType === type) && hasAll(p, amenLabels));
 
   // Links that toggle one filter and keep everything else in the query.
   const withParams = (changes: Record<string, string | null>) => {

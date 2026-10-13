@@ -6,6 +6,8 @@ export const SITE = {
     "Book Pique Properties' homes directly: hot tubs, saunas, mountain views and city stays across Edmonton, Canmore and Calgary, with live pricing, no platform service fee and a local team on call.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://piquelifestyle.com").replace(/\/$/, ""),
   locale: "en_CA",
+  // Main line for calls and texts (from piquelifestyle.com).
+  phone: { e164: "+17802300267", display: "1-780-230-0267" },
 };
 
 export type CitySlug = "edmonton" | "canmore" | "calgary";

@@ -12,3 +12,10 @@ Direct booking site for Pique Properties (Edmonton, Canmore, Calgary). Next.js A
 - Listing text was written for Airbnb; `cleanDescription()` drops the policies block and platform mentions until rewritten copy exists.
 - Property URLs end in the first 8 characters of the Hospitable id; a renamed listing 308-redirects to its new slug. Don't change the slug format without redirects.
 - Every page must stay readable without JS (crawlers and AI assistants): animations only toggle classes on server-rendered content.
+
+## Ask Pique (chat)
+- `src/components/AskPique.tsx` (floating chat, conversation kept in sessionStorage) → `POST /api/chat` (`src/app/api/chat/route.ts`): Claude (`claude-opus-5-5`, effort low, server-side fallbacks) in a manual tool loop, at most 6 tool rounds, 20 guest messages per chat, 1,000 characters per message, rough per-IP limit.
+- Rules live in `src/lib/chat/prompt.ts` (MDP 10-13): may quote and explain prices and point out real discounts (longer stay, other dates, cheaper similar home) from `price_stay`, **never negotiates**; hands off to call/text (1-780-230-0267, `SITE.phone`) for deals, existing bookings, exceptions, upset guests or anything unsure. No age rule (none of the 94 listings has one).
+- Tools (`src/lib/chat/tools.ts`) only read the public allowlisted data the pages use: `search_homes` (same `searchHomes()` as /search), `get_home`, `price_stay` (same `priceStay()` as the booking box, max 6 per answer), `offer_contact` (shows Call / Text with a pre-written text). The reply keeps only links to our own pages.
+- Every turn is saved to the ops Supabase project through `record_website_chat_turn()` (pique-ops migration `20261013010000_website_chats.sql`; tables `website_chats`, `website_chat_messages`, staff-readable): the site holds only the public anon key plus `WEBSITE_CHAT_SECRET`, which the function checks against a stored hash. Saving runs after the reply and never blocks it.
+- Env: `ANTHROPIC_API_KEY` (without it the chat answers "isn't switched on yet" with Call / Text), `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `WEBSITE_CHAT_SECRET`.

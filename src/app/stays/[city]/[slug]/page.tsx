@@ -232,7 +232,7 @@ export default async function PropertyPage({ params }: Params) {
       {/* Phones: the booking box sits below the content, so keep a way to it on screen. */}
       <a
         href="#book"
-        className="fixed inset-x-4 bottom-4 z-40 rounded-full bg-ember py-3.5 text-center font-medium text-white shadow-lg lg:hidden"
+        className="fixed bottom-4 left-4 right-20 z-40 rounded-full bg-ember py-3.5 text-center font-medium text-white shadow-lg lg:hidden"
       >
         Check dates &amp; price
       </a>
