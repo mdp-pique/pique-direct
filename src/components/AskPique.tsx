@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type Contact = { phone: string; display: string; text: string };
-type Turn = { role: "guest" | "assistant"; content: string; contact?: Contact | null };
+type Turn = { role: "guest" | "assistant"; content: string; contact?: Contact | null; ref?: string };
 
 const STORE = "ask-pique";
 const SUGGESTIONS = [
@@ -78,7 +78,7 @@ export function AskPique() {
       });
       const j = await res.json().catch(() => ({}));
       const contact: Contact | null = j.contact && typeof j.contact === "object" ? j.contact : null;
-      setTurns([...next, { role: "assistant", content: j.reply ?? j.error ?? "Something went wrong.", contact }]);
+      setTurns([...next, { role: "assistant", content: j.reply ?? j.error ?? "Something went wrong.", contact, ref: typeof j.ref === "string" ? j.ref : undefined }]);
     } catch {
       setTurns([...next, { role: "assistant", content: "I couldn't reach the server. Check your connection and try again." }]);
     } finally {
@@ -161,6 +161,7 @@ export function AskPique() {
                 <div key={i} className="max-w-[92%] text-sm leading-relaxed">
                   <Rich text={t.content} onNavigate={() => window.innerWidth < 768 && setOpen(false)} />
                   {t.contact && <ContactButtons c={t.contact} />}
+                  {t.ref && <p className="mt-2 text-[11px] text-muted">Error code {t.ref}</p>}
                 </div>
               ),
             )}

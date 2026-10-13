@@ -9,6 +9,8 @@ import { SITE } from "@/lib/site";
 export const maxDuration = 60;
 
 const MODEL = "claude-opus-5-5";
+// The model the ops app's assistant already runs on this account; used only if MODEL is refused.
+const FALLBACK_MODEL = "claude-sonnet-5";
 const MAX_GUEST_TURNS = 20; // per conversation
 const MAX_CHARS = 1000; // per guest message
 const MAX_STEPS = 6; // tool rounds per answer
@@ -62,30 +64,57 @@ export async function POST(req: Request) {
     content: String(t.content).slice(0, 4000),
   }));
   while (messages.length && messages[0].role !== "user") messages.shift();
-  messages.push({
-    role: "system",
-    content: `Today is ${new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton", weekday: "long", year: "numeric", month: "long", day: "numeric" })} (Edmonton time).${
-      body.page ? ` The guest is on ${body.page.slice(0, 200)}.` : ""
-    }`,
-  });
+  const historyLen = messages.length;
+  const dateNote = `Today is ${new Date().toLocaleDateString("en-CA", { timeZone: "America/Edmonton", weekday: "long", year: "numeric", month: "long", day: "numeric" })} (Edmonton time).${
+    body.page ? ` The guest is on ${body.page.slice(0, 200)}.` : ""
+  }`;
 
   const client = new Anthropic();
   const ctx: ToolContext = { quotes: 0, contact: null, linkedHomes: new Set() };
   const toolLog: { name: string; input: unknown }[] = [];
   let reply = "";
 
+  // Full mode uses server-side fallbacks, strict tools and a mid-conversation
+  // date note. If the API rejects any of that for this account, plain mode
+  // retries with the shape the ops app's assistant already runs in production
+  // (date in the system prompt, plain tools), then on that app's model.
+  let mode: "full" | "plain" | "plain-alt" = "full";
+  const call = () => {
+    const plain = mode !== "full";
+    return client.beta.messages.create({
+      model: mode === "plain-alt" ? FALLBACK_MODEL : MODEL,
+      max_tokens: 4000,
+      ...(plain ? {} : { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const, output_config: { effort: "low" as const } }),
+      system: [
+        { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+        ...(plain ? [{ type: "text" as const, text: dateNote }] : []),
+      ],
+      tools: plain ? TOOLS.map((t) => ({ ...t, strict: false })) : TOOLS,
+      messages: plain
+        ? messages
+        : [...messages.slice(0, historyLen), { role: "system" as const, content: dateNote }, ...messages.slice(historyLen)],
+    });
+  };
+  const callWithRetry = async () => {
+    for (;;) {
+      try {
+        return await call();
+      } catch (e) {
+        const status = e instanceof Anthropic.APIError ? e.status : undefined;
+        console.error(`chat model error (mode ${mode})`, status, e instanceof Error ? e.message : e);
+        // Only request-shape problems (400/403/404) get another shape; outages and rate limits don't.
+        if (mode !== "plain-alt" && (status === 400 || status === 403 || status === 404)) {
+          mode = mode === "full" ? "plain" : "plain-alt";
+          continue;
+        }
+        throw e;
+      }
+    }
+  };
+
   try {
     for (let step = 0; step < MAX_STEPS; step++) {
-      const response = await client.beta.messages.create({
-        model: MODEL,
-        max_tokens: 4000,
-        betas: ["server-side-fallback-2026-07-01"],
-        fallbacks: "default",
-        output_config: { effort: "low" },
-        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-        tools: TOOLS,
-        messages,
-      });
+      const response = await callWithRetry();
 
       if (response.stop_reason === "refusal") {
         reply = "I can't help with that one here. Our team can, though: give us a call or send a text.";
@@ -118,9 +147,19 @@ export async function POST(req: Request) {
       messages.push({ role: "user", content: results });
     }
   } catch (e) {
-    console.error("chat", e);
-    return NextResponse.json({ error: "Ask Pique is having trouble right now. Call or text us and we'll help.", contact: CONTACT }, { status: 502 });
+    const status = e instanceof Anthropic.APIError ? e.status : undefined;
+    console.error("chat failed", status, e);
+    return NextResponse.json(
+      {
+        error: "Ask Pique is having trouble right now. Call or text us and we'll help.",
+        contact: CONTACT,
+        // Short code for whoever is debugging; says nothing sensitive.
+        ref: `${status ?? "net"}-${mode}`,
+      },
+      { status: 502 },
+    );
   }
+  if (mode !== "full") console.warn(`chat answered in ${mode} mode`);
 
   if (!reply) {
     reply = "Sorry, I couldn't finish that one. Could you ask it a different way, or call or text the team?";
