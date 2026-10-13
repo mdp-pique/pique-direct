@@ -3,9 +3,20 @@ import Link from "next/link";
 import type { PublicProperty } from "@/lib/properties";
 import { propertyHref } from "@/lib/urls";
 
-export function PropertyCard({ p, priority = false }: { p: PublicProperty; priority?: boolean }) {
+export function PropertyCard({
+  p,
+  priority = false,
+  query,
+  price,
+}: {
+  p: PublicProperty;
+  priority?: boolean;
+  // Search dates/guests carried to the property page so its calendar opens on them.
+  query?: string;
+  price?: { perNight: string; total: string; nights: number };
+}) {
   return (
-    <Link href={propertyHref(p)} className="group block">
+    <Link href={query ? `${propertyHref(p)}?${query}` : propertyHref(p)} className="group block">
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-paper-2">
         {p.heroImage && (
           <Image
@@ -30,6 +41,12 @@ export function PropertyCard({ p, priority = false }: { p: PublicProperty; prior
           <p className="mt-0.5 text-sm text-ink-soft">
             {p.cityName} · {p.guests} guests · {p.bedrooms} {p.bedrooms === 1 ? "bedroom" : "bedrooms"}
           </p>
+          {price && (
+            <p className="mt-1 text-sm">
+              <span className="font-semibold">{price.perNight}</span> / night
+              <span className="text-muted"> · {price.total} for {price.nights} {price.nights === 1 ? "night" : "nights"} before fees</span>
+            </p>
+          )}
         </div>
         <span className="mt-1 shrink-0 text-ember transition-transform duration-300 group-hover:translate-x-1">→</span>
       </div>

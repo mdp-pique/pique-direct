@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PropertyCard } from "@/components/PropertyCard";
 import { Reveal } from "@/components/Reveal";
+import { SearchBar } from "@/components/SearchBar";
 import { getProperties } from "@/lib/properties";
 import { CITIES, type CitySlug } from "@/lib/site";
 
@@ -18,6 +19,9 @@ export default async function Stays() {
   return (
     <div className="mx-auto max-w-7xl px-4 pt-28 sm:px-6">
       <h1 className="font-display text-5xl font-medium sm:text-6xl">All stays</h1>
+      <div className="mt-8">
+        <SearchBar />
+      </div>
       {(Object.keys(CITIES) as CitySlug[]).map((city) => {
         const list = properties.filter((p) => p.city === city);
         if (!list.length) return null;

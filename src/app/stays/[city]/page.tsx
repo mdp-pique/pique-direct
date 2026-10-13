@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PropertyCard } from "@/components/PropertyCard";
 import { propertyHref } from "@/lib/urls";
 import { Reveal } from "@/components/Reveal";
+import { SearchBar } from "@/components/SearchBar";
 import { getPropertiesInCity } from "@/lib/properties";
 import { CITIES, SITE, cityFromName } from "@/lib/site";
 
@@ -59,6 +60,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         {hotTubs ? ` · ${hotTubs} with a hot tub` : ""}
         {petFriendly ? ` · ${petFriendly} pet friendly` : ""}
       </p>
+      <div className="mt-8">
+        <SearchBar initial={{ city }} />
+      </div>
       <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((p, i) => (
           <Reveal key={p.id} delay={(i % 3) * 80}>

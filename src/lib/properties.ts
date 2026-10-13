@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import fixtures from "../../data/fixtures/properties.json";
 import {
+  getCalendar,
   getPropertyImages,
   getPropertyReviews,
   hasHospitableToken,
@@ -60,12 +61,83 @@ const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
 
 export const getProperties = cache(async (): Promise<PublicProperty[]> => {
   const raw = await rawProperties();
-  return raw
+  const list = raw
     .filter((p) => p.listed)
     .map(toPublicProperty)
     .filter((p): p is PublicProperty => p !== null)
     .sort((a, b) => a.title.localeCompare(b.title));
+  // Hospitable's `picture` is usually Airbnb's small thumbnail on Airbnb's own
+  // image host, so the cover is the first full-size photo from the gallery.
+  await mapLimit(list, 8, async (p) => {
+    const first = (await getImages(p.id).catch(() => []))[0];
+    p.heroImage = first?.url ?? null;
+  });
+  return list;
 });
+
+export async function mapLimit<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) await fn(items[next++]);
+    }),
+  );
+}
+
+// --- availability ----------------------------------------------------------
+
+export type StayDay = {
+  date: string;
+  available: boolean;
+  price: number;
+  minStay: number;
+  noCheckin: boolean;
+  noCheckout: boolean;
+};
+
+// Twelve months of calendar from today. The same request (and cache entry)
+// serves the booking calendar and date search.
+export const getYearCalendar = cache(async (id: string): Promise<StayDay[]> => {
+  const start = new Date();
+  const end = new Date(start);
+  end.setUTCFullYear(end.getUTCFullYear() + 1);
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  const days = await getCalendar(id, iso(start), iso(end));
+  return days.map((d) => ({
+    date: d.date,
+    available: d.status.available,
+    price: d.price.amount,
+    minStay: d.min_stay,
+    noCheckin: d.closed_for_checkin,
+    noCheckout: d.closed_for_checkout,
+  }));
+});
+
+// Can this stay be booked? Every night must be open, the check-in day must
+// allow arrival and meet its minimum stay, and the check-out day must allow
+// departure. Returns the summed nightly rate (cents, before fees and taxes).
+export function checkStay(days: StayDay[], checkin: string, checkout: string): { ok: true; nightly: number; nights: number } | { ok: false } {
+  const byDate = new Map(days.map((d) => [d.date, d]));
+  const first = byDate.get(checkin);
+  if (!first || first.noCheckin) return { ok: false };
+  let total = 0;
+  let nights = 0;
+  for (let d = checkin; d < checkout; d = addDay(d)) {
+    const day = byDate.get(d);
+    if (!day?.available) return { ok: false };
+    total += day.price;
+    nights++;
+  }
+  if (nights < Math.max(1, first.minStay)) return { ok: false };
+  if (byDate.get(checkout)?.noCheckout) return { ok: false };
+  return { ok: true, nightly: total, nights };
+}
+
+function addDay(iso: string) {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
 
 export async function getPropertiesInCity(city: CitySlug) {
   return (await getProperties()).filter((p) => p.city === city);
@@ -145,7 +217,7 @@ export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
     petsAllowed: Boolean(p.house_rules?.pets_allowed),
     childrenAllowed: p.house_rules?.children_allowed !== false,
     geo: Number.isFinite(lat) && Number.isFinite(lng) ? { lat: round2(lat), lng: round2(lng) } : null,
-    heroImage: p.picture,
+    heroImage: null,
     currency: p.currency || "CAD",
   };
 }
@@ -154,7 +226,8 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 
 function cleanTitle(name: string) {
   return name
-    .replace(/^\s*NEW\s+/i, "")
+    .replace(/[★☆✓✔⚡✨❤♥️•✦‣]+/gu, " · ")
+    .replace(/^\s*[·\s]*NEW\b\s*/i, "")
     .replace(/#\d+[A-Z]?\s*(&\s*#\d+[A-Z]?)?/g, "")
     .replace(/[*|]+/g, " · ")
     .replace(/\s*-\s+|\s+-\s*/g, " · ")

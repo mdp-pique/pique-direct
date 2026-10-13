@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { PropertyCard } from "@/components/PropertyCard";
 import { Reveal } from "@/components/Reveal";
-import { getProperties } from "@/lib/properties";
+import { getProperties, getReviews, mapLimit } from "@/lib/properties";
+import { SearchBar } from "@/components/SearchBar";
 import { CITIES, type CitySlug } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -38,7 +39,14 @@ export default async function Home() {
   }));
   const hero = properties.find((p) => p.city === "canmore")?.heroImage ?? properties[0]?.heroImage ?? null;
   const featured = properties.slice(0, 6);
-  const highlights = [...new Set(properties.flatMap((p) => p.amenities))].slice(0, 14);
+  // Real guest quotes for the strip under the hero: short, five-star, one per home.
+  const quotes: { text: string; home: string }[] = [];
+  await mapLimit(properties.slice(0, 16), 8, async (p) => {
+    const r = (await getReviews(p.id).catch(() => null))?.reviews.find(
+      (x) => x.rating === 5 && x.text.length >= 50 && x.text.length <= 180,
+    );
+    if (r) quotes.push({ text: r.text, home: `${p.cityName}` });
+  });
 
   return (
     <>
@@ -63,32 +71,25 @@ export default async function Home() {
             {properties.length > 2 ? `${properties.length} homes` : "Homes"} with private hot tubs, saunas and
             mountain views, booked directly with the people who host them.
           </p>
-          <div className="rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: "850ms" }}>
-            {counts.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/stays/${c.slug}`}
-                className="rounded-full border border-white/40 bg-white/10 px-5 py-2.5 text-sm font-medium backdrop-blur-md transition hover:bg-white hover:text-ink"
-              >
-                {c.name}
-              </Link>
-            ))}
+          <div className="rise mt-8 max-w-4xl" style={{ animationDelay: "850ms" }}>
+            <SearchBar variant="hero" />
           </div>
         </div>
       </section>
 
-      {/* Amenity marquee */}
-      {highlights.length > 0 && (
-        <div className="overflow-hidden border-b border-line bg-paper py-5" aria-hidden>
-          <div className="marquee flex w-max gap-10 whitespace-nowrap font-display text-2xl italic text-ink-soft">
-            {[...highlights, ...highlights].map((h, i) => (
-              <span key={i} className="flex items-center gap-10">
-                {h}
-                <span className="text-ember not-italic">✦</span>
-              </span>
+      {/* Guest quotes, drifting past. Pauses on hover so a quote can be read. */}
+      {quotes.length > 2 && (
+        <section aria-label="What guests say" className="group overflow-hidden border-b border-line bg-paper py-8">
+          <div className="marquee flex w-max gap-6 group-hover:[animation-play-state:paused]">
+            {[...quotes, ...quotes].map((q, i) => (
+              <figure key={i} aria-hidden={i >= quotes.length} className="w-[340px] shrink-0 rounded-2xl border border-line bg-card p-5">
+                <p className="text-ember">★★★★★</p>
+                <blockquote className="font-display mt-2 text-lg leading-snug">&ldquo;{q.text}&rdquo;</blockquote>
+                <figcaption className="mt-3 text-xs uppercase tracking-wider text-muted">Guest in {q.home}</figcaption>
+              </figure>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
       {/* Cities */}

@@ -30,6 +30,23 @@ export function BookingWidget({
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Dates and guests from a search (?checkin=&checkout=&guests=&pets=) preselect the stay.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const ci = q.get("checkin");
+    const co = q.get("checkout");
+    /* eslint-disable react-hooks/set-state-in-effect -- one-time read of the URL after hydration */
+    if (ci && co && /^\d{4}-\d{2}-\d{2}$/.test(ci) && /^\d{4}-\d{2}-\d{2}$/.test(co) && co > ci) {
+      setCheckin(ci);
+      setCheckout(co);
+      setMonth(`${ci.slice(0, 7)}-01`);
+    }
+    const g = Number(q.get("guests"));
+    if (g >= 1) setAdults(Math.min(g, maxGuests));
+    if (q.get("pets") === "1" && petsAllowed) setPets(1);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [maxGuests, petsAllowed]);
+
   useEffect(() => {
     let live = true;
     fetch(`/api/availability?id=${propertyId}`)
