@@ -56,22 +56,22 @@ export function SearchBar({ initial = {}, variant = "page" }: { initial?: Search
     <form
       ref={root}
       onSubmit={submit}
-      className={`relative rounded-[1.75rem] border border-line p-1.5 text-ink shadow-[0_24px_60px_-30px_rgba(0,0,0,0.55)] md:rounded-full ${
+      className={`relative rounded-[1.75rem] border border-line p-1.5 text-ink md:w-fit md:max-w-full shadow-[0_24px_60px_-30px_rgba(0,0,0,0.55)] md:rounded-full ${
         "bg-card"
       }`}
     >
       <div className="grid grid-cols-2 md:flex md:items-center">
-        <Field label="Where" value={city ? CITIES[city as CitySlug].name : "Anywhere"} active={open === "where"} onClick={() => toggle("where")} className="col-span-2 md:w-48" />
+        <Field label="Where" value={city ? CITIES[city as CitySlug].name : "Anywhere"} active={open === "where"} onClick={() => toggle("where")} className="col-span-2 md:w-40" />
         <Field
           label="Dates"
           value={dates ?? "Add dates"}
           placeholder={!dates}
           active={open === "dates"}
           onClick={() => toggle("dates")}
-          className="col-span-2 md:flex-1"
+          className="col-span-2 md:w-60"
         />
-        <Field label="Who" value={describeParty(party)} active={open === "who"} onClick={() => toggle("who")} className="md:w-52" />
-        <button type="submit" className="m-1 rounded-full bg-ember px-7 py-3.5 font-medium text-white transition hover:bg-ember-2">
+        <Field label="Who" value={describeParty(party)} active={open === "who"} onClick={() => toggle("who")} className="md:w-48" />
+        <button type="submit" className="m-1 rounded-full bg-ember px-6 py-3.5 md:ml-2 font-medium text-white transition hover:bg-ember-2">
           Search
         </button>
       </div>
@@ -83,7 +83,7 @@ export function SearchBar({ initial = {}, variant = "page" }: { initial?: Search
             // The hero bar sits at the bottom of the screen, so its panels open upward.
             variant === "hero" ? "md:bottom-[calc(100%+10px)] md:top-auto" : "md:bottom-auto md:top-[calc(100%+10px)]"
           } ${
-            open === "dates" ? "md:left-0 md:right-0" : open === "who" ? "md:right-0 md:w-[380px]" : "md:left-0 md:w-72"
+            open === "dates" ? "md:left-0 md:w-[720px]" : open === "who" ? "md:right-0 md:w-[380px]" : "md:left-0 md:w-72"
           }`}
           style={{ animation: "fade 0.2s ease-out both" }}
         >
@@ -144,8 +144,12 @@ export function SearchBar({ initial = {}, variant = "page" }: { initial?: Search
           {open === "who" && (
             <>
               <GuestPicker party={party} onChange={setParty} />
-              <button type="submit" className="mt-4 w-full rounded-full bg-ember py-3 font-medium text-white hover:bg-ember-2">
-                Search
+              <button
+                type="button"
+                onClick={() => setOpen(null)}
+                className="mt-4 w-full rounded-full bg-ink py-3 font-medium text-paper transition hover:opacity-90"
+              >
+                Done
               </button>
             </>
           )}

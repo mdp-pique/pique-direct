@@ -30,7 +30,7 @@ export function PropertyCard({
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
         {p.petsAllowed && (
-          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-ink backdrop-blur">
+          <span className="absolute left-3 top-3 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-[#17140f] shadow-sm">
             Pet friendly
           </span>
         )}

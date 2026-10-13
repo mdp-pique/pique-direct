@@ -56,7 +56,7 @@ export function Gallery({ images, title }: { images: PublicImage[]; title: strin
         <button
           type="button"
           onClick={() => setOpen(0)}
-          className="absolute bottom-4 right-4 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-ink shadow backdrop-blur transition hover:bg-white"
+          className="absolute bottom-4 right-4 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#17140f] shadow transition hover:bg-white/90"
         >
           Show all {images.length} photos
         </button>
