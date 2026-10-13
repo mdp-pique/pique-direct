@@ -26,6 +26,7 @@ export type PublicProperty = {
   highlights: string[];
   description: string[];
   propertyType: string;
+  spaceType: SpaceType;
   guests: number;
   bedrooms: number;
   beds: number;
@@ -206,6 +207,7 @@ export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
     highlights,
     description: cleanDescription(p.description),
     propertyType: humanize(p.property_type ?? "home"),
+    spaceType: spaceTypeOf(p),
     guests: p.capacity?.max ?? 0,
     bedrooms: p.capacity?.bedrooms ?? 0,
     beds: p.capacity?.beds ?? 0,
@@ -220,6 +222,26 @@ export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
     heroImage: null,
     currency: p.currency || "CAD",
   };
+}
+
+// What a guest is actually getting, in their words. Several Edmonton houses
+// are split into a main-floor unit and a basement suite; only the internal
+// listing name says which, so it's read here and only the label is published.
+export type SpaceType = "house" | "main" | "basement" | "condo";
+
+export const SPACE_TYPES: Record<SpaceType, string> = {
+  house: "Entire house",
+  main: "Main floor",
+  basement: "Basement suite",
+  condo: "Condo or apartment",
+};
+
+function spaceTypeOf(p: HospitableProperty): SpaceType {
+  const names = `${p.name} ${p.public_name ?? ""}`;
+  if (/\b(bsmt|basement|lower)\b/i.test(names) || p.property_type === "guest_suite") return "basement";
+  if (/\b(main|upper|upstairs)\b/i.test(p.name)) return "main";
+  if (["condominium", "serviced_apartment", "loft", "apartment"].includes(p.property_type ?? "")) return "condo";
+  return "house";
 }
 
 const round2 = (n: number) => Math.round(n * 100) / 100;

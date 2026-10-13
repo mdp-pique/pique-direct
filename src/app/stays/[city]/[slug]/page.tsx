@@ -12,6 +12,7 @@ import {
   getImages,
   getProperties,
   getReviews,
+  SPACE_TYPES,
   uniqueAmenities,
 } from "@/lib/properties";
 import { SITE } from "@/lib/site";
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const lead = p.summary[0] ?? p.description[0] ?? "";
   return {
     title: `${p.title} · ${p.cityName} vacation rental`,
-    description: `${p.propertyType} in ${p.cityName}, sleeps ${p.guests}, ${p.bedrooms} bedrooms. ${lead}`.slice(0, 300),
+    description: `${SPACE_TYPES[p.spaceType]} in ${p.cityName}, sleeps ${p.guests}, ${p.bedrooms} bedrooms. ${lead}`.slice(0, 300),
     alternates: { canonical: propertyHref(p) },
     openGraph: {
       title: p.title,
@@ -116,7 +117,7 @@ export default async function PropertyPage({ params }: Params) {
       </nav>
       <h1 className="font-display rise text-4xl font-medium leading-tight sm:text-5xl">{p.title}</h1>
       <p className="rise mt-2 text-ink-soft" style={{ animationDelay: "100ms" }}>
-        {p.propertyType} in {p.cityName}, {p.region}
+        {SPACE_TYPES[p.spaceType]} in {p.cityName}, {p.region}
         {reviews.average ? ` · ★ ${reviews.average.toFixed(2)} (${reviews.total} reviews)` : ""}
       </p>
 
@@ -223,7 +224,7 @@ export default async function PropertyPage({ params }: Params) {
           )}
         </div>
 
-        <aside id="book" className="scroll-mt-20 lg:sticky lg:top-24 lg:self-start">
+        <aside id="book" className="scroll-mt-20 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:self-start lg:overflow-y-auto">
           <BookingWidget propertyId={p.id} maxGuests={p.guests} petsAllowed={p.petsAllowed} currency={p.currency} />
         </aside>
       </div>

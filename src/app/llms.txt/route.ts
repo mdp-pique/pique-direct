@@ -1,5 +1,5 @@
 import { propertyHref } from "@/lib/urls";
-import { getProperties } from "@/lib/properties";
+import { SPACE_TYPES, getProperties } from "@/lib/properties";
 import { CITIES, type CitySlug, SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -27,7 +27,7 @@ export async function GET() {
         p.petsAllowed ? "pet friendly" : null,
         ...[...new Set(p.amenities)].filter((a) => ["Hot tub", "Sauna", "Pool", "Fireplace", "Air conditioning", "Garage"].includes(a)),
       ].filter(Boolean);
-      lines.push(`- [${p.title}](${SITE.url}${propertyHref(p)}): ${p.propertyType.toLowerCase()}, ${facts.join(", ")}`);
+      lines.push(`- [${p.title}](${SITE.url}${propertyHref(p)}): ${SPACE_TYPES[p.spaceType].toLowerCase()}, ${facts.join(", ")}`);
     }
     lines.push("");
   }

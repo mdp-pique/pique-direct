@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { DEFAULT_PARTY, describeParty, partyFromQuery, type Party } from "@/lib/party";
 import { GuestPicker } from "./GuestPicker";
+import { formatRange } from "./RangeCalendar";
 
 type Day = { date: string; available: boolean; price: number; minStay: number; noCheckin: boolean; noCheckout: boolean };
 type Quote = { nights: number; bookingUrl: string; lines: { label: string; amount: string; discount?: boolean }[]; total: string };
@@ -27,6 +28,8 @@ export function BookingWidget({
   const [checkout, setCheckout] = useState<string | null>(null);
   const [party, setParty] = useState<Party>(DEFAULT_PARTY);
   const [whoOpen, setWhoOpen] = useState(false);
+  // Once both dates are picked the calendar folds into one line, so the price and Book now stay on screen.
+  const [calendarOpen, setCalendarOpen] = useState(true);
   const { adults, children, infants, pets } = party;
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
@@ -42,6 +45,7 @@ export function BookingWidget({
       setCheckin(ci);
       setCheckout(co);
       setMonth(`${ci.slice(0, 7)}-01`);
+      setCalendarOpen(false);
     }
     if (q.has("adults") || q.has("guests")) {
       const p = partyFromQuery((k) => q.get(k));
@@ -125,6 +129,7 @@ export function BookingWidget({
       return;
     }
     setCheckout(date);
+    setCalendarOpen(false);
   }
 
   const today = isoDate(new Date());
@@ -145,6 +150,18 @@ export function BookingWidget({
 
       {calendarError ? (
         <p className="mt-4 rounded-xl bg-paper-2 p-4 text-sm text-ink-soft">{calendarError}</p>
+      ) : !calendarOpen && checkin && checkout ? (
+        <button
+          type="button"
+          onClick={() => setCalendarOpen(true)}
+          className="mt-4 flex w-full items-center justify-between rounded-2xl border border-line px-4 py-3 text-left"
+        >
+          <span>
+            <span className="block text-xs font-semibold">Dates</span>
+            <span className="block text-sm text-ink-soft">{formatRange(checkin, checkout)}</span>
+          </span>
+          <span className="text-sm font-medium underline underline-offset-4">Change</span>
+        </button>
       ) : (
         <div className="mt-4">
           <div className="flex items-center justify-between">

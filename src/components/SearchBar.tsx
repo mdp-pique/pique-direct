@@ -13,7 +13,16 @@ type Panel = "where" | "dates" | "who" | null;
 
 // Where / when / who, sent to /search. Each field opens its own panel; on
 // phones the panel docks to the bottom of the screen like a sheet.
-export function SearchBar({ initial = {}, variant = "page" }: { initial?: SearchValues; variant?: "hero" | "page" }) {
+export function SearchBar({
+  initial = {},
+  variant = "page",
+  keepQuery,
+}: {
+  initial?: SearchValues;
+  variant?: "hero" | "page";
+  // Filters already applied on the results page, kept when searching again.
+  keepQuery?: string;
+}) {
   const router = useRouter();
   const [city, setCity] = useState(initial.city ?? "");
   const [checkin, setCheckin] = useState<string | null>(initial.checkin ?? null);
@@ -38,7 +47,7 @@ export function SearchBar({ initial = {}, variant = "page" }: { initial?: Search
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    const q = new URLSearchParams();
+    const q = new URLSearchParams(keepQuery);
     if (city) q.set("city", city);
     if (checkin && checkout) {
       q.set("checkin", checkin);

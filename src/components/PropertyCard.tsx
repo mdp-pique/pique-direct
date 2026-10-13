@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { PublicProperty } from "@/lib/properties";
+import { SPACE_TYPES, type PublicProperty } from "@/lib/properties";
 import { propertyHref } from "@/lib/urls";
 
 export function PropertyCard({
@@ -39,7 +39,7 @@ export function PropertyCard({
         <div>
           <h3 className="font-display text-lg font-medium leading-snug transition group-hover:text-ember">{p.title}</h3>
           <p className="mt-0.5 text-sm text-ink-soft">
-            {p.cityName} · {p.guests} guests · {p.bedrooms} {p.bedrooms === 1 ? "bedroom" : "bedrooms"}
+            {SPACE_TYPES[p.spaceType]} in {p.cityName} · sleeps {p.guests} · {p.bedrooms} {p.bedrooms === 1 ? "bedroom" : "bedrooms"}
           </p>
           {price && (
             <p className="mt-1 text-sm">
