@@ -127,13 +127,13 @@ export function BookingWidget({
   const today = isoDate(new Date());
 
   return (
-    <div className="rounded-3xl border border-line bg-card p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.25)] sm:p-6">
+    <div className="rounded-3xl border border-rule bg-card p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.25)] sm:p-6">
       <p className="font-display text-2xl">
         {/* Only Hospitable's direct quote is a real price: the calendar's nightly
             amounts are the Airbnb listing rates, so they're never shown. */}
         {quote ? (
           <>
-            {quote.total} <span className="text-base text-ink-soft">total</span>
+            {quote.total} <span className="text-base text-basalt-soft">total</span>
           </>
         ) : (
           "Check dates & price"
@@ -141,16 +141,16 @@ export function BookingWidget({
       </p>
 
       {calendarError ? (
-        <p className="mt-4 rounded-xl bg-paper-2 p-4 text-sm text-ink-soft">{calendarError}</p>
+        <p className="mt-4 rounded-xl bg-snow-2 p-4 text-sm text-basalt-soft">{calendarError}</p>
       ) : !calendarOpen && checkin && checkout ? (
         <button
           type="button"
           onClick={() => setCalendarOpen(true)}
-          className="mt-4 flex w-full items-center justify-between rounded-2xl border border-line px-4 py-3 text-left"
+          className="mt-4 flex w-full items-center justify-between rounded-2xl border border-rule px-4 py-3 text-left"
         >
           <span>
             <span className="block text-xs font-semibold">Dates</span>
-            <span className="block text-sm text-ink-soft">{formatRange(checkin, checkout)}</span>
+            <span className="block text-sm text-basalt-soft">{formatRange(checkin, checkout)}</span>
           </span>
           <span className="text-sm font-medium underline underline-offset-4">Change</span>
         </button>
@@ -162,7 +162,7 @@ export function BookingWidget({
               aria-label="Previous month"
               disabled={month <= firstOfMonth(new Date())}
               onClick={() => setMonth(addMonths(month, -1))}
-              className="h-9 w-9 rounded-full hover:bg-paper-2 disabled:opacity-30"
+              className="h-9 w-9 rounded-full hover:bg-snow-2 disabled:opacity-30"
             >
               ←
             </button>
@@ -173,12 +173,12 @@ export function BookingWidget({
               type="button"
               aria-label="Next month"
               onClick={() => setMonth(addMonths(month, 1))}
-              className="h-9 w-9 rounded-full hover:bg-paper-2"
+              className="h-9 w-9 rounded-full hover:bg-snow-2"
             >
               →
             </button>
           </div>
-          <div className="mt-2 grid grid-cols-7 text-center text-[11px] text-muted">
+          <div className="mt-2 grid grid-cols-7 text-center text-[11px] text-mist">
             {WEEKDAYS.map((w, i) => (
               <span key={i}>{w}</span>
             ))}
@@ -199,12 +199,12 @@ export function BookingWidget({
                   onClick={() => pick(date)}
                   className={`flex h-12 flex-col items-center justify-center rounded-xl text-sm transition ${
                     isEnd
-                      ? "bg-alpine text-paper"
+                      ? "bg-river text-snow"
                       : inRange
-                        ? "bg-alpine/10"
+                        ? "bg-river/10"
                         : open
-                          ? "hover:bg-paper-2"
-                          : "text-muted line-through opacity-50"
+                          ? "hover:bg-snow-2"
+                          : "text-mist line-through opacity-50"
                   }`}
                 >
                   <span>{Number(date.slice(8))}</span>
@@ -212,11 +212,11 @@ export function BookingWidget({
               );
             })}
           </div>
-          {!days && <p className="mt-2 text-center text-xs text-muted">Loading live availability…</p>}
+          {!days && <p className="mt-2 text-center text-xs text-mist">Loading live availability…</p>}
         </div>
       )}
 
-      <div className="mt-4 rounded-2xl border border-line">
+      <div className="mt-4 rounded-2xl border border-rule">
         <button
           type="button"
           aria-expanded={whoOpen}
@@ -225,28 +225,28 @@ export function BookingWidget({
         >
           <span>
             <span className="block text-xs font-semibold">Who</span>
-            <span className="block text-sm text-ink-soft">{describeParty(party)}</span>
+            <span className="block text-sm text-basalt-soft">{describeParty(party)}</span>
           </span>
-          <span className={`text-muted transition ${whoOpen ? "rotate-180" : ""}`}>⌄</span>
+          <span className={`text-mist transition ${whoOpen ? "rotate-180" : ""}`}>⌄</span>
         </button>
         {whoOpen && (
-          <div className="border-t border-line px-4 pb-3">
+          <div className="border-t border-rule px-4 pb-3">
             <GuestPicker party={party} onChange={setParty} maxGuests={maxGuests} petsAllowed={petsAllowed} />
           </div>
         )}
       </div>
 
-      {quoteError && <p className="mt-4 text-sm text-ember-2">{quoteError}</p>}
+      {quoteError && <p className="mt-4 text-sm text-larch-2">{quoteError}</p>}
 
       {quote && (
-        <div className="mt-5 space-y-2 border-t border-line pt-4 text-sm">
+        <div className="mt-5 space-y-2 border-t border-rule pt-4 text-sm">
           {quote.lines.map((l) => (
-            <div key={l.label} className={`flex justify-between ${l.discount ? "text-alpine" : ""}`}>
-              <span className="text-ink-soft">{l.label}</span>
+            <div key={l.label} className={`flex justify-between ${l.discount ? "text-river" : ""}`}>
+              <span className="text-basalt-soft">{l.label}</span>
               <span>{l.amount}</span>
             </div>
           ))}
-          <div className="flex justify-between border-t border-line pt-2 text-base font-semibold">
+          <div className="flex justify-between border-t border-rule pt-2 text-base font-semibold">
             <span>Total</span>
             <span>{quote.total}</span>
           </div>
@@ -256,16 +256,16 @@ export function BookingWidget({
       {quote ? (
         <a
           href={quote.bookingUrl}
-          className="mt-5 block rounded-full bg-ember py-3.5 text-center font-medium text-white transition hover:bg-ember-2"
+          className="mt-5 block rounded-full bg-river py-3.5 text-center font-medium text-on-dark transition hover:bg-river-2"
         >
           Book now
         </a>
       ) : (
-        <p className="mt-5 rounded-full border border-line py-3.5 text-center text-sm text-ink-soft">
+        <p className="mt-5 rounded-full border border-rule py-3.5 text-center text-sm text-basalt-soft">
           {loading ? "Pricing your stay…" : checkin ? "Now pick your check-out day" : "Pick your check-in day"}
         </p>
       )}
-      <p className="mt-3 text-center text-xs text-muted">Secure checkout by Stripe. No platform service fee.</p>
+      <p className="mt-3 text-center text-xs text-mist">Secure checkout by Stripe. No platform service fee.</p>
     </div>
   );
 }

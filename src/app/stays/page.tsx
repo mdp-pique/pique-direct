@@ -18,7 +18,7 @@ export default async function Stays() {
   const properties = await getProperties();
   return (
     <div className="mx-auto max-w-7xl px-4 pt-28 sm:px-6">
-      <h1 className="font-display text-5xl font-medium sm:text-6xl">All stays</h1>
+      <h1 className="font-display text-5xl sm:text-6xl">All stays</h1>
       <div className="mt-8">
         <SearchBar />
       </div>
@@ -27,9 +27,9 @@ export default async function Stays() {
         if (!list.length) return null;
         return (
           <section key={city} className="pt-16">
-            <div className="flex items-end justify-between gap-4 border-b border-line pb-4">
+            <div className="flex items-end justify-between gap-4 border-b border-rule pb-4">
               <h2 className="font-display text-3xl">{CITIES[city].name}</h2>
-              <Link href={`/stays/${city}`} className="text-sm font-medium text-ember hover:underline">
+              <Link href={`/stays/${city}`} className="text-sm font-medium text-larch hover:underline">
                 {list.length} {list.length === 1 ? "home" : "homes"} →
               </Link>
             </div>

@@ -101,7 +101,7 @@ export function AskPique() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={open ? "Close Ask Pique" : "Ask Pique a question"}
-        className={`fixed bottom-4 right-4 z-[55] flex h-14 items-center gap-2 rounded-full bg-alpine px-5 font-medium text-paper shadow-[0_18px_40px_-12px_rgba(0,0,0,0.5)] transition hover:scale-[1.03] ${
+        className={`fixed bottom-4 right-4 z-[55] flex h-14 items-center gap-2 rounded-full bg-river px-5 font-medium text-snow shadow-[0_18px_40px_-12px_rgba(0,0,0,0.5)] transition hover:scale-[1.03] ${
           open ? "max-md:hidden" : ""
         }`}
       >
@@ -112,21 +112,21 @@ export function AskPique() {
       {open && (
         <section
           aria-label="Ask Pique"
-          className="fixed inset-0 z-[56] flex flex-col bg-card text-ink md:inset-auto md:bottom-24 md:right-4 md:h-[min(640px,calc(100dvh-8rem))] md:w-[400px] md:rounded-3xl md:border md:border-line md:shadow-2xl"
+          className="fixed inset-0 z-[56] flex flex-col bg-card text-basalt md:inset-auto md:bottom-24 md:right-4 md:h-[min(640px,calc(100dvh-8rem))] md:w-[400px] md:rounded-3xl md:border md:border-rule md:shadow-2xl"
           style={{ animation: "fade 0.2s ease-out both" }}
         >
-          <header className="flex items-center justify-between border-b border-line px-5 py-4">
+          <header className="flex items-center justify-between border-b border-rule px-5 py-4">
             <div>
               <p className="font-display text-xl">Ask Pique</p>
-              <p className="text-xs text-muted">Homes, dates and prices, answered right away</p>
+              <p className="text-xs text-mist">Homes, dates and prices, answered right away</p>
             </div>
             <div className="flex items-center gap-1">
               {turns.length > 0 && (
-                <button type="button" onClick={reset} className="rounded-full px-3 py-1.5 text-xs text-ink-soft hover:bg-paper-2">
+                <button type="button" onClick={reset} className="rounded-full px-3 py-1.5 text-xs text-basalt-soft hover:bg-snow-2">
                   New chat
                 </button>
               )}
-              <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="h-9 w-9 rounded-full text-lg hover:bg-paper-2">
+              <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="h-9 w-9 rounded-full text-lg hover:bg-snow-2">
                 ✕
               </button>
             </div>
@@ -135,7 +135,7 @@ export function AskPique() {
           <div ref={listRef} className="flex-1 space-y-4 overflow-y-auto px-5 py-5" aria-live="polite">
             {turns.length === 0 && (
               <div>
-                <p className="text-ink-soft">
+                <p className="text-basalt-soft">
                   Hi! Tell me where and when you&apos;d like to stay, or ask anything about our homes.
                 </p>
                 <div className="mt-4 flex flex-col items-start gap-2">
@@ -144,7 +144,7 @@ export function AskPique() {
                       key={s}
                       type="button"
                       onClick={() => send(s)}
-                      className="rounded-full border border-line px-4 py-2 text-left text-sm transition hover:border-ink"
+                      className="rounded-full border border-rule px-4 py-2 text-left text-sm transition hover:border-basalt"
                     >
                       {s}
                     </button>
@@ -154,19 +154,19 @@ export function AskPique() {
             )}
             {turns.map((t, i) =>
               t.role === "guest" ? (
-                <p key={i} className="ml-auto w-fit max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-alpine px-4 py-2.5 text-sm text-paper">
+                <p key={i} className="ml-auto w-fit max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-river px-4 py-2.5 text-sm text-snow">
                   {t.content}
                 </p>
               ) : (
                 <div key={i} className="max-w-[92%] text-sm leading-relaxed">
                   <Rich text={t.content} onNavigate={() => window.innerWidth < 768 && setOpen(false)} />
                   {t.contact && <ContactButtons c={t.contact} />}
-                  {t.ref && <p className="mt-2 text-[11px] text-muted">Error code {t.ref}</p>}
+                  {t.ref && <p className="mt-2 text-[11px] text-mist">Error code {t.ref}</p>}
                 </div>
               ),
             )}
             {busy && (
-              <p className="flex gap-1 text-muted" aria-label="Ask Pique is typing">
+              <p className="flex gap-1 text-mist" aria-label="Ask Pique is typing">
                 <span className="animate-bounce">•</span>
                 <span className="animate-bounce [animation-delay:120ms]">•</span>
                 <span className="animate-bounce [animation-delay:240ms]">•</span>
@@ -179,7 +179,7 @@ export function AskPique() {
               e.preventDefault();
               send(draft);
             }}
-            className="flex items-end gap-2 border-t border-line p-3"
+            className="flex items-end gap-2 border-t border-rule p-3"
           >
             <textarea
               ref={inputRef}
@@ -195,17 +195,17 @@ export function AskPique() {
               maxLength={1000}
               placeholder="Ask about a stay"
               aria-label="Your message"
-              className="max-h-32 min-h-11 flex-1 resize-none rounded-2xl border border-line bg-paper px-4 py-2.5 text-sm outline-none focus:border-ink"
+              className="max-h-32 min-h-11 flex-1 resize-none rounded-2xl border border-rule bg-snow px-4 py-2.5 text-sm outline-none focus:border-basalt"
             />
             <button
               type="submit"
               disabled={busy || !draft.trim()}
-              className="h-11 rounded-full bg-ember px-5 text-sm font-medium text-white transition hover:bg-ember-2 disabled:opacity-40"
+              className="h-11 rounded-full bg-river px-5 text-sm font-medium text-on-dark transition hover:bg-river-2 disabled:opacity-40"
             >
               Send
             </button>
           </form>
-          <p className="px-5 pb-3 text-center text-[11px] text-muted">
+          <p className="px-5 pb-3 text-center text-[11px] text-mist">
             Ask Pique can make mistakes. Chats are saved so we can improve.
           </p>
         </section>
@@ -217,10 +217,10 @@ export function AskPique() {
 function ContactButtons({ c }: { c: Contact }) {
   return (
     <div className="mt-3 flex flex-wrap gap-2">
-      <a href={`tel:${c.phone}`} className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper">
+      <a href={`tel:${c.phone}`} className="rounded-full bg-basalt px-4 py-2 text-sm font-medium text-snow">
         Call {c.display}
       </a>
-      <a href={`sms:${c.phone}?&body=${encodeURIComponent(c.text)}`} className="rounded-full border border-ink px-4 py-2 text-sm font-medium">
+      <a href={`sms:${c.phone}?&body=${encodeURIComponent(c.text)}`} className="rounded-full border border-basalt px-4 py-2 text-sm font-medium">
         Text us
       </a>
     </div>
@@ -257,7 +257,7 @@ function inline(text: string, onNavigate: () => void) {
     const link = part.match(/^\[([^\]]+)\]\((\/[^)\s]*)\)$/);
     if (link) {
       return (
-        <Link key={i} href={link[2]} onClick={onNavigate} className="font-medium text-ember underline underline-offset-2">
+        <Link key={i} href={link[2]} onClick={onNavigate} className="font-medium text-larch underline underline-offset-2">
           {link[1]}
         </Link>
       );

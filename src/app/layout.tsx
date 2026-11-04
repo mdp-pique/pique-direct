@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Bodoni_Moda, Geist } from "next/font/google";
 import { AskPique } from "@/components/AskPique";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -7,8 +7,9 @@ import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", axes: ["SOFT", "opsz"] });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// Same type as the owner site (pique-management): Bodoni Moda for display, Geist for text.
+const bodoni = Bodoni_Moda({ subsets: ["latin"], variable: "--font-bodoni", axes: ["opsz"] });
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -23,14 +24,14 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f2ea" },
-    { media: "(prefers-color-scheme: dark)", color: "#12110e" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f4f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#17191a" },
   ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-CA" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en-CA" className={`${bodoni.variable} ${geist.variable}`}>
       <head>
         {/* Lets the scroll-reveal CSS hide content only when JS is running. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

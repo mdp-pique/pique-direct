@@ -49,13 +49,13 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           })),
         }}
       />
-      <p className="rise text-xs font-semibold uppercase tracking-[0.3em] text-ember">{c.name}, {c.region}</p>
-      <h1 className="font-display rise mt-3 max-w-3xl text-5xl font-medium leading-[1] sm:text-6xl">{c.headline}</h1>
-      <p className="rise mt-5 max-w-2xl text-lg text-ink-soft" style={{ animationDelay: "120ms" }}>
+      <p className="text-xs font-semibold text-larch">{c.name}, {c.region}</p>
+      <h1 className="font-display mt-3 max-w-3xl text-5xl leading-[1] sm:text-6xl">{c.headline}</h1>
+      <p className="mt-5 max-w-2xl text-lg text-basalt-soft">
         {c.intro}
       </p>
       {/* A plain-language fact line: easy for search snippets and AI answers to lift. */}
-      <p className="mt-4 text-sm text-muted">
+      <p className="mt-4 text-sm text-mist">
         {list.length} {list.length === 1 ? "home" : "homes"} in {c.name}
         {hotTubs ? ` · ${hotTubs} with a hot tub` : ""}
         {petFriendly ? ` · ${petFriendly} pet friendly` : ""}

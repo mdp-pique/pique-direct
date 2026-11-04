@@ -21,13 +21,12 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        solid ? "bg-paper/85 text-ink shadow-[0_1px_0_var(--line)] backdrop-blur-xl" : "bg-transparent text-white"
+        solid ? "bg-snow/85 text-basalt shadow-[0_1px_0_var(--rule)] backdrop-blur-xl" : "bg-transparent text-on-dark"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="font-display text-2xl font-semibold tracking-tight">
+        <Link href="/" className="font-display text-[28px] leading-none tracking-tight" aria-label={SITE.name}>
           {SITE.shortName}
-          <span className="text-ember">.</span>
         </Link>
         <nav className="flex items-center gap-1 text-sm sm:gap-2">
           {(Object.keys(CITIES) as (keyof typeof CITIES)[]).map((slug) => (
@@ -41,7 +40,7 @@ export function Header() {
           ))}
           <Link
             href="/stays"
-            className="rounded-full bg-ember px-4 py-2 font-medium text-white transition hover:bg-ember-2"
+            className="rounded-full bg-river px-4 py-2 font-medium text-on-dark transition hover:bg-river-2"
           >
             Find a stay
           </Link>

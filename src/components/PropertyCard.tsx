@@ -17,7 +17,7 @@ export function PropertyCard({
 }) {
   return (
     <Link href={query ? `${propertyHref(p)}?${query}` : propertyHref(p)} className="group block">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-paper-2">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-snow-2">
         {p.heroImage && (
           <Image
             src={p.heroImage}
@@ -37,18 +37,18 @@ export function PropertyCard({
       </div>
       <div className="mt-3 flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-display text-lg font-medium leading-snug transition group-hover:text-ember">{p.title}</h3>
-          <p className="mt-0.5 text-sm text-ink-soft">
+          <h3 className="font-display text-lg leading-snug transition group-hover:text-river-2">{p.title}</h3>
+          <p className="mt-0.5 text-sm text-basalt-soft">
             {SPACE_TYPES[p.spaceType]} in {p.cityName} · sleeps {p.guests} · {p.bedrooms} {p.bedrooms === 1 ? "bedroom" : "bedrooms"}
           </p>
           {price && (
             <p className="mt-1 text-sm">
               <span className="font-semibold">{price.perNight}</span> / night
-              <span className="text-muted"> · {price.total} for {price.nights} {price.nights === 1 ? "night" : "nights"} before fees</span>
+              <span className="text-mist"> · {price.total} for {price.nights} {price.nights === 1 ? "night" : "nights"} before fees</span>
             </p>
           )}
         </div>
-        <span className="mt-1 shrink-0 text-ember transition-transform duration-300 group-hover:translate-x-1">→</span>
+        <span className="mt-1 shrink-0 text-larch transition-transform duration-300 group-hover:translate-x-1">→</span>
       </div>
     </Link>
   );

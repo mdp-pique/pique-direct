@@ -40,7 +40,7 @@ export function RangeCalendar({
             <p className="text-center text-[15px] font-semibold">
               {new Date(`${m}T12:00:00`).toLocaleDateString("en-CA", { month: "long", year: "numeric" })}
             </p>
-            <div className="mt-4 grid grid-cols-7 text-center text-xs text-muted">
+            <div className="mt-4 grid grid-cols-7 text-center text-xs text-mist">
               {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
                 <span key={d} className="pb-2">
                   {d}
@@ -57,9 +57,9 @@ export function RangeCalendar({
                 return (
                   <div
                     key={date}
-                    className={`relative h-11 ${between ? "bg-alpine/10" : ""} ${
-                      isStart && rangeEnd ? "rounded-l-full bg-alpine/10" : ""
-                    } ${isEnd && checkin ? "rounded-r-full bg-alpine/10" : ""}`}
+                    className={`relative h-11 ${between ? "bg-river/10" : ""} ${
+                      isStart && rangeEnd ? "rounded-l-full bg-river/10" : ""
+                    } ${isEnd && checkin ? "rounded-r-full bg-river/10" : ""}`}
                   >
                     <button
                       type="button"
@@ -70,10 +70,10 @@ export function RangeCalendar({
                       aria-pressed={isStart || isEnd}
                       className={`absolute inset-0 m-auto h-11 w-11 rounded-full text-sm transition ${
                         isStart || isEnd
-                          ? "bg-alpine font-semibold text-paper"
+                          ? "bg-river font-semibold text-snow"
                           : past
-                            ? "cursor-default text-muted/50 line-through"
-                            : "hover:ring-1 hover:ring-ink"
+                            ? "cursor-default text-mist/50 line-through"
+                            : "hover:ring-1 hover:ring-basalt"
                       } ${date === today && !isStart ? "font-semibold underline underline-offset-4" : ""}`}
                     >
                       {Number(date.slice(8))}
@@ -96,7 +96,7 @@ function NavButton({ label, disabled, onClick, children }: { label: string; disa
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-xl transition hover:bg-paper-2 disabled:opacity-25"
+      className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-xl transition hover:bg-snow-2 disabled:opacity-25"
     >
       {children}
     </button>

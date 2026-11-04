@@ -39,7 +39,7 @@ export function Gallery({ images, title }: { images: PublicImage[]; title: strin
             key={img.url}
             type="button"
             onClick={() => setOpen(i)}
-            className={`group relative overflow-hidden bg-paper-2 ${
+            className={`group relative overflow-hidden bg-snow-2 ${
               i === 0 ? "col-span-4 row-span-2 md:col-span-2" : "hidden md:block"
             }`}
           >
@@ -73,7 +73,7 @@ export function Gallery({ images, title }: { images: PublicImage[]; title: strin
             </button>
           </div>
           <div className="relative flex-1">
-            <Image key={images[open].url} src={images[open].url} alt={images[open].alt || title} fill sizes="100vw" className="rise object-contain" />
+            <Image key={images[open].url} src={images[open].url} alt={images[open].alt || title} fill sizes="100vw" className="fade object-contain" />
             <button type="button" aria-label="Previous photo" onClick={() => step(-1)} className="absolute left-2 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-xl hover:bg-white/20">
               ←
             </button>

@@ -83,21 +83,21 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           })}
         </div>
       </div>
-      <h1 className="font-display mt-12 text-4xl font-medium sm:text-5xl">
+      <h1 className="font-display mt-12 text-4xl sm:text-5xl">
         {results.length} {results.length === 1 ? "home" : "homes"} {liveChecked ? "available" : ""} in {where}
       </h1>
-      <p className="mt-2 text-ink-soft">
+      <p className="mt-2 text-basalt-soft">
         For {describeParty(party)}
         {when}.{!hasDates && " Add dates to see only the homes that are free, with prices."}
       </p>
 
       {results.length === 0 ? (
-        <div className="mt-12 rounded-3xl border border-line bg-card p-10 text-center">
+        <div className="mt-12 rounded-3xl border border-rule bg-card p-10 text-center">
           <p className="font-display text-2xl">{base.length ? "No homes match those filters." : "Nothing open for those dates."}</p>
-          <p className="mt-2 text-ink-soft">
+          <p className="mt-2 text-basalt-soft">
             {base.length ? "Turn off a filter or two to see more." : "Try shifting by a day or two, or searching all cities."}
           </p>
-          <Link href="/stays" className="mt-6 inline-block rounded-full bg-ember px-6 py-3 font-medium text-white hover:bg-ember-2">
+          <Link href="/stays" className="mt-6 inline-block rounded-full bg-river px-6 py-3 font-medium text-on-dark hover:bg-river-2">
             Browse all stays
           </Link>
         </div>
@@ -132,7 +132,7 @@ function Chip({
   children: React.ReactNode;
 }) {
   if (disabled) {
-    return <span className="rounded-full border border-line px-4 py-2 text-sm text-muted opacity-50">{children}</span>;
+    return <span className="rounded-full border border-rule px-4 py-2 text-sm text-mist opacity-50">{children}</span>;
   }
   return (
     <Link
@@ -140,11 +140,11 @@ function Chip({
       scroll={false}
       aria-pressed={on}
       className={`rounded-full border px-4 py-2 text-sm transition ${
-        on ? "border-ink bg-ink text-paper" : "border-line hover:border-ink"
+        on ? "border-basalt bg-basalt text-snow" : "border-rule hover:border-basalt"
       }`}
     >
       {children}
-      {count !== undefined && <span className={on ? "text-paper/70" : "text-muted"}> {count}</span>}
+      {count !== undefined && <span className={on ? "text-snow/70" : "text-mist"}> {count}</span>}
     </Link>
   );
 }

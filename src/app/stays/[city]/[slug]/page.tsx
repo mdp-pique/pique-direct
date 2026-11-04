@@ -111,12 +111,12 @@ export default async function PropertyPage({ params }: Params) {
         }}
       />
 
-      <nav className="mb-4 text-sm text-muted" aria-label="Breadcrumb">
-        <Link href="/stays" className="hover:text-ember">Stays</Link> /{" "}
-        <Link href={`/stays/${p.city}`} className="hover:text-ember">{p.cityName}</Link>
+      <nav className="mb-4 text-sm text-mist" aria-label="Breadcrumb">
+        <Link href="/stays" className="hover:text-river-2">Stays</Link> /{" "}
+        <Link href={`/stays/${p.city}`} className="hover:text-river-2">{p.cityName}</Link>
       </nav>
-      <h1 className="font-display rise text-4xl font-medium leading-tight sm:text-5xl">{p.title}</h1>
-      <p className="rise mt-2 text-ink-soft" style={{ animationDelay: "100ms" }}>
+      <h1 className="font-display text-4xl leading-tight sm:text-5xl">{p.title}</h1>
+      <p className="mt-2 text-basalt-soft">
         {SPACE_TYPES[p.spaceType]} in {p.cityName}, {p.region}
         {reviews.average ? ` · ★ ${reviews.average.toFixed(2)} (${reviews.total} reviews)` : ""}
       </p>
@@ -128,7 +128,7 @@ export default async function PropertyPage({ params }: Params) {
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_400px]">
         <div className="min-w-0">
           {/* Key facts first, in plain words: what search snippets and AI answers quote. */}
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-rule bg-rule sm:grid-cols-4">
             {[
               ["Guests", p.guests],
               ["Bedrooms", p.bedrooms],
@@ -136,7 +136,7 @@ export default async function PropertyPage({ params }: Params) {
               ["Bathrooms", p.bathrooms],
             ].map(([k, v]) => (
               <div key={k} className="bg-card p-4">
-                <dt className="text-xs uppercase tracking-wider text-muted">{k}</dt>
+                <dt className="text-xs text-mist">{k}</dt>
                 <dd className="font-display mt-1 text-2xl">{v}</dd>
               </div>
             ))}
@@ -153,7 +153,7 @@ export default async function PropertyPage({ params }: Params) {
               <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
                 {p.highlights.map((h) => (
                   <li key={h} className="flex gap-3">
-                    <span className="text-ember">✦</span>
+                    <span className="text-larch">✦</span>
                     <span>{h}</span>
                   </li>
                 ))}
@@ -163,7 +163,7 @@ export default async function PropertyPage({ params }: Params) {
 
           <section className="mt-12">
             <h2 className="font-display text-3xl">About this home</h2>
-            <div className="mt-4 space-y-4 whitespace-pre-line leading-relaxed text-ink-soft">
+            <div className="mt-4 space-y-4 whitespace-pre-line leading-relaxed text-basalt-soft">
               {p.description.map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -175,7 +175,7 @@ export default async function PropertyPage({ params }: Params) {
               <h2 className="font-display text-3xl">Where you&apos;ll sleep</h2>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                 {p.sleeping.map((s) => (
-                  <li key={s} className="rounded-xl border border-line bg-card p-4 text-sm">{s}</li>
+                  <li key={s} className="rounded-xl border border-rule bg-card p-4 text-sm">{s}</li>
                 ))}
               </ul>
             </section>
@@ -186,7 +186,7 @@ export default async function PropertyPage({ params }: Params) {
               <h2 className="font-display text-3xl">What&apos;s here</h2>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {amenities.map((a) => (
-                  <li key={a} className="rounded-full border border-line px-4 py-2 text-sm">{a}</li>
+                  <li key={a} className="rounded-full border border-rule px-4 py-2 text-sm">{a}</li>
                 ))}
               </ul>
             </section>
@@ -194,7 +194,7 @@ export default async function PropertyPage({ params }: Params) {
 
           <section className="mt-12">
             <h2 className="font-display text-3xl">Good to know</h2>
-            <ul className="mt-4 space-y-2 text-ink-soft">
+            <ul className="mt-4 space-y-2 text-basalt-soft">
               {p.checkin && <li>Check-in from {fmtTime(p.checkin)}</li>}
               {p.checkout && <li>Check-out by {fmtTime(p.checkout)}</li>}
               <li>{p.petsAllowed ? "Pets welcome (a nightly pet fee applies)." : "No pets, please."}</li>
@@ -211,10 +211,10 @@ export default async function PropertyPage({ params }: Params) {
               </h2>
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 {reviews.reviews.slice(0, 6).map((r, i) => (
-                  <Reveal key={r.id} delay={(i % 2) * 100} as="article" className="rounded-2xl border border-line bg-card p-5">
-                    <p className="text-ember">{"★".repeat(Math.round(r.rating))}</p>
+                  <Reveal key={r.id} delay={(i % 2) * 100} as="article" className="rounded-2xl border border-rule bg-card p-5">
+                    <p className="text-larch">{"★".repeat(Math.round(r.rating))}</p>
                     <p className="mt-2 leading-relaxed">{r.text}</p>
-                    <p className="mt-3 text-xs text-muted">
+                    <p className="mt-3 text-xs text-mist">
                       {r.source} guest · {new Date(r.date).toLocaleDateString("en-CA", { month: "long", year: "numeric" })}
                     </p>
                   </Reveal>
@@ -232,7 +232,7 @@ export default async function PropertyPage({ params }: Params) {
       {/* Phones: the booking box sits below the content, so keep a way to it on screen. */}
       <a
         href="#book"
-        className="fixed bottom-4 left-4 right-20 z-40 rounded-full bg-ember py-3.5 text-center font-medium text-white shadow-lg lg:hidden"
+        className="fixed bottom-4 left-4 right-20 z-40 rounded-full bg-river py-3.5 text-center font-medium text-on-dark shadow-lg lg:hidden"
       >
         Check dates &amp; price
       </a>
