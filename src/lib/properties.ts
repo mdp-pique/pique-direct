@@ -3,6 +3,7 @@ import { cache } from "react";
 import fixtures from "../../data/fixtures/properties.json";
 import {
   getCalendar,
+  getPropertyCopy,
   getPropertyImages,
   getPropertyReviews,
   hasHospitableToken,
@@ -57,7 +58,22 @@ const FIXTURES = (fixtures as unknown as { properties: FixtureEntry[] }).propert
 
 const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
   if (!hasHospitableToken()) return FIXTURES.map((f) => f.property);
-  return listProperties();
+  const list = await listProperties();
+  // The team edits the Airbnb copy (MDP 11-04: use the Airbnb title and text as they are).
+  // Prefer a direct override if one is ever set, then Airbnb, then the team default.
+  await mapLimit(list, 8, async (p) => {
+    const copy = await getPropertyCopy(p.id);
+    if (!copy) return;
+    const pick = (t?: { default: string | null; overrides?: Record<string, string | null | undefined> }) =>
+      t ? (t.overrides?.direct ?? t.overrides?.airbnb ?? t.default ?? null) : null;
+    const name = pick(copy.public_name);
+    const summary = pick(copy.summary);
+    const body = [pick(copy.space_overview), pick(copy.neighborhood_overview), pick(copy.transit)].filter(Boolean).join("\n\n");
+    if (name) p.public_name = name;
+    if (summary) p.summary = summary;
+    if (body) p.description = body;
+  });
+  return list;
 });
 
 // Listings still live in Hospitable that must never show or be bookable here.
@@ -200,7 +216,7 @@ export const getReviews = cache(
 export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
   const city = cityFromName(p.address?.city);
   if (!city) return null;
-  const title = cleanTitle(p.public_name || p.name);
+  const title = (p.public_name || cleanTitle(p.name)).replace(/\s+/g, " ").trim();
   const lat = Number(p.address.coordinates?.latitude);
   const lng = Number(p.address.coordinates?.longitude);
   const { summary, highlights } = splitSummary(p.summary);

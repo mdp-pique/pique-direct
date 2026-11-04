@@ -66,6 +66,29 @@ export async function listProperties(): Promise<HospitableProperty[]> {
   return out;
 }
 
+// Per-channel listing copy (Hospitable "property details": a team default plus
+// overrides per platform). Only the public copy fields are typed: the same
+// response also carries the house manual, wifi and directions, never read here.
+type ChannelText = { default: string | null; overrides?: Partial<Record<"direct" | "airbnb" | "booking" | "vrbo" | "agoda", string | null>> };
+export type HospitableListingCopy = {
+  public_name?: ChannelText;
+  summary?: ChannelText;
+  space_overview?: ChannelText;
+  neighborhood_overview?: ChannelText;
+  transit?: ChannelText;
+};
+
+// Null when the endpoint isn't available; callers keep the plain property text.
+export async function getPropertyCopy(uuid: string): Promise<HospitableListingCopy | null> {
+  try {
+    const res = await call<{ data: HospitableListingCopy }>(`/properties/${uuid}/details`, cached);
+    return res.data ?? null;
+  } catch (e) {
+    console.warn("property details unavailable", uuid, e instanceof Error ? e.message.slice(0, 120) : e);
+    return null;
+  }
+}
+
 export async function getPropertyImages(uuid: string): Promise<HospitableImage[]> {
   const res = await call<{ data: HospitableImage[] }>(`/properties/${uuid}/images`, cached);
   return res.data;
