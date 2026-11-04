@@ -60,10 +60,18 @@ const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
   return listProperties();
 });
 
+// Listings still live in Hospitable that must never show or be bookable here.
+// Spruce 1BDRM / 2 BDRM / Joint Listing: no longer managed (Laurice 11-04).
+const HIDDEN_PROPERTY_IDS = new Set([
+  "82df651d-6a00-4080-9c98-5e32f5eafdf0",
+  "4b9a9c23-c661-4521-a072-b58007c5925a",
+  "db27abcd-36a5-421c-94d1-916e7925d197",
+]);
+
 export const getProperties = cache(async (): Promise<PublicProperty[]> => {
   const raw = await rawProperties();
   const list = raw
-    .filter((p) => p.listed)
+    .filter((p) => p.listed && !HIDDEN_PROPERTY_IDS.has(p.id))
     .map(toPublicProperty)
     .filter((p): p is PublicProperty => p !== null)
     .sort((a, b) => a.title.localeCompare(b.title));
