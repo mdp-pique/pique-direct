@@ -46,7 +46,7 @@ export function GuestPicker({
       </ul>
       {party.infants > 0 && (
         <p className="mt-1 rounded-xl bg-river/10 px-4 py-3 text-sm text-basalt">
-          Pack &apos;n plays are free. We&apos;ll confirm one for your stay before you arrive.
+          Pack &apos;n plays are free, and we&apos;ll have one ready for your stay.
         </p>
       )}
       {seated >= maxGuests && maxGuests < 16 && <p className="mt-2 text-sm text-mist">This home sleeps up to {maxGuests}, not counting infants.</p>}
