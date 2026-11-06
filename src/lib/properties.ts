@@ -1,4 +1,5 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import fixtures from "../../data/fixtures/properties.json";
 import {
@@ -6,6 +7,7 @@ import {
   getPropertyCopy,
   getPropertyImages,
   getPropertyReviews,
+  HOSPITABLE_TAG,
   hasHospitableToken,
   listProperties,
 } from "./hospitable/client";
@@ -84,7 +86,9 @@ const HIDDEN_PROPERTY_IDS = new Set([
   "db27abcd-36a5-421c-94d1-916e7925d197",
 ]);
 
-export const getProperties = cache(async (): Promise<PublicProperty[]> => {
+// The finished list (listing copy and cover photo included) is cached as one
+// entry, so pages don't re-read ~200 Hospitable responses on every request.
+const loadProperties = async (): Promise<PublicProperty[]> => {
   const raw = await rawProperties();
   const list = raw
     .filter((p) => p.listed && !HIDDEN_PROPERTY_IDS.has(p.id))
@@ -98,7 +102,11 @@ export const getProperties = cache(async (): Promise<PublicProperty[]> => {
     p.heroImage = first?.url ?? null;
   });
   return list;
-});
+};
+
+export const getProperties = cache(
+  unstable_cache(loadProperties, ["public-properties-v1"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
+);
 
 export async function mapLimit<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
   let next = 0;
@@ -120,12 +128,14 @@ export type StayDay = {
   noCheckout: boolean;
 };
 
-// Twelve months of calendar from today. The same request (and cache entry)
-// serves the booking calendar and date search.
+// A year of calendar, from the 1st of this month to 13 months on. The same
+// request (and cache entry) serves the booking calendar and date search.
+// Starting on the 1st keeps the cache key the same all month, so a stale copy
+// is served at once while it refreshes, instead of a cold read every day.
 export const getYearCalendar = cache(async (id: string): Promise<StayDay[]> => {
-  const start = new Date();
-  const end = new Date(start);
-  end.setUTCFullYear(end.getUTCFullYear() + 1);
+  const now = new Date();
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const end = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 13, 1));
   const iso = (d: Date) => d.toISOString().slice(0, 10);
   const days = await getCalendar(id, iso(start), iso(end));
   return days.map((d) => ({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { CITIES, type CitySlug } from "@/lib/site";
 import { DEFAULT_PARTY, describeParty, partyToQuery, type Party } from "@/lib/party";
 import { GuestPicker } from "./GuestPicker";
@@ -30,6 +30,8 @@ export function SearchBar({
   const [party, setParty] = useState<Party>(initial.party ?? DEFAULT_PARTY);
   const [open, setOpen] = useState<Panel>(null);
   const root = useRef<HTMLFormElement>(null);
+  // Checking every home's calendar can take a few seconds: show it right away.
+  const [searching, startSearch] = useTransition();
 
   useEffect(() => {
     if (!open) return;
@@ -55,7 +57,7 @@ export function SearchBar({
     }
     partyToQuery(party, q);
     setOpen(null);
-    router.push(`/search?${q}`);
+    startSearch(() => router.push(`/search?${q}`));
   }
 
   const toggle = (p: Panel) => setOpen((cur) => (cur === p ? null : p));
@@ -80,8 +82,14 @@ export function SearchBar({
           className="col-span-2 md:w-60"
         />
         <Field label="Who" value={describeParty(party)} active={open === "who"} onClick={() => toggle("who")} className="md:w-48" />
-        <button type="submit" className="m-1 rounded-full bg-river px-6 py-3.5 md:ml-2 font-medium text-on-dark transition hover:bg-river-2">
-          Search
+        <button
+          type="submit"
+          disabled={searching}
+          aria-busy={searching}
+          className="m-1 inline-flex items-center justify-center gap-2 rounded-full bg-river px-6 py-3.5 md:ml-2 font-medium text-on-dark transition hover:bg-river-2 disabled:cursor-wait disabled:opacity-90"
+        >
+          {searching && <span aria-hidden className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />}
+          {searching ? "Searching" : "Search"}
         </button>
       </div>
 

@@ -27,9 +27,9 @@ export async function searchHomes(input: {
   let liveChecked = false;
   if (input.checkin && input.checkout && hasHospitableToken()) {
     liveChecked = true;
-    // Calendars are cached for 5 minutes; a cold search reads them 10 at a time.
+    // Calendars are cached (5 min, served stale while refreshing); a cold search reads them 20 at a time.
     const open: Required<SearchHit>[] = [];
-    await mapLimit(candidates, 10, async (p) => {
+    await mapLimit(candidates, 20, async (p) => {
       const days = await getYearCalendar(p.id).catch(() => null);
       const stay = days ? checkStay(days, input.checkin!, input.checkout!) : null;
       if (stay?.ok) open.push({ p, nightly: stay.nightly, nights: stay.nights });
