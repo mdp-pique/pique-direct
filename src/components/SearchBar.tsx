@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { CITIES, type CitySlug } from "@/lib/site";
 import { DEFAULT_PARTY, describeParty, partyToQuery, type Party } from "@/lib/party";
+import { track } from "@/lib/track";
 import { GuestPicker } from "./GuestPicker";
 import { RangeCalendar, formatRange } from "./RangeCalendar";
 
@@ -57,6 +58,7 @@ export function SearchBar({
     }
     partyToQuery(party, q);
     setOpen(null);
+    track("search", { search_term: city || "all", checkin: checkin ?? undefined, checkout: checkout ?? undefined, guests: party.adults + party.children, pets: party.pets });
     startSearch(() => router.push(`/search?${q}`));
   }
 

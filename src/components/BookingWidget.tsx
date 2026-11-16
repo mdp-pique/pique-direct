@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { track } from "@/lib/track";
 import { DEFAULT_PARTY, describeParty, partyFromQuery, type Party } from "@/lib/party";
 import { GuestPicker } from "./GuestPicker";
 import { formatRange } from "./RangeCalendar";
@@ -256,6 +257,9 @@ export function BookingWidget({
       {quote ? (
         <a
           href={quote.bookingUrl}
+          onClick={() =>
+            track("begin_checkout", { currency: "CAD", value: Number(quote.total.replace(/[^0-9.]/g, "")) || undefined, item_id: propertyId, nights: quote.nights })
+          }
           className="mt-5 block rounded-full bg-river py-3.5 text-center font-medium text-on-dark transition hover:bg-river-2"
         >
           Book now

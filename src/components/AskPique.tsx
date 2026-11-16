@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { track } from "@/lib/track";
 
 type Contact = { phone: string; display: string; text: string };
 type Turn = { role: "guest" | "assistant"; content: string; contact?: Contact | null; ref?: string };
@@ -65,6 +66,7 @@ export function AskPique() {
     const next: Turn[] = [...turns, { role: "guest", content }];
     setTurns(next);
     setDraft("");
+    track("ask_pique_message", { message_number: next.filter((t) => t.role === "guest").length });
     setBusy(true);
     try {
       const res = await fetch("/api/chat", {

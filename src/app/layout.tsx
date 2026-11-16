@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Geist } from "next/font/google";
 import { AskPique } from "@/components/AskPique";
+import { CookieBanner } from "@/components/CookieBanner";
+import { Tracking } from "@/components/Tracking";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
@@ -20,6 +22,11 @@ export const metadata: Metadata = {
   openGraph: { type: "website", siteName: SITE.name, locale: SITE.locale },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true, "max-image-preview": "large" },
+  // Search Console / Bing Webmaster Tools ownership tags (HTML tag method); set in Vercel.
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } } : {}),
+  },
 };
 
 export const viewport: Viewport = {
@@ -51,6 +58,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main>{children}</main>
         <Footer />
         <AskPique />
+        <CookieBanner />
+        <Tracking />
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+import { CookieSettingsLink } from "@/components/CookieBanner";
 import Link from "next/link";
 import { CITIES, SITE } from "@/lib/site";
 
@@ -31,6 +32,7 @@ export function Footer() {
       </div>
       <p className="pb-8 text-center text-xs text-mist">
         © {new Date().getFullYear()} {SITE.name}
+        <CookieSettingsLink className="ml-4 hover:text-basalt" />
       </p>
     </footer>
   );
