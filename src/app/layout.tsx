@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, "max-image-preview": "large" },
   // Search Console / Bing Webmaster Tools ownership tags (HTML tag method); set in Vercel.
   verification: {
-    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),
-    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } } : {}),
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "dE0yhu7plA5kA815Bgb-T3yn8IhNWKBYiwanDaOCeKY",
+    other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ?? "EF130544B212B46DE29C7602AF1067E1" },
   },
 };
 
