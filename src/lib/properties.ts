@@ -91,6 +91,7 @@ const HIDDEN_PROPERTY_IDS = new Set([
 
 // The finished list (listing copy and cover photo included) is cached as one
 // entry, so pages don't re-read ~200 Hospitable responses on every request.
+// Bump the key when the shape or naming of the list changes, or old data stays up to an hour.
 const loadProperties = async (): Promise<PublicProperty[]> => {
   const raw = await rawProperties();
   const list = raw
@@ -108,7 +109,7 @@ const loadProperties = async (): Promise<PublicProperty[]> => {
 };
 
 export const getProperties = cache(
-  unstable_cache(loadProperties, ["public-properties-v1"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
+  unstable_cache(loadProperties, ["public-properties-v2"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
 );
 
 export async function mapLimit<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
