@@ -70,8 +70,6 @@ const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
     const pick = (t?: { default: string | null; overrides?: Record<string, string | null | undefined> }) =>
       t ? (t.overrides?.direct ?? t.overrides?.airbnb ?? t.default ?? null) : null;
     const name = pick(copy.public_name);
-    // A direct-site name set in Hospitable is used as is; an Airbnb title gets cleaned (homeName).
-    if (copy.public_name?.overrides?.direct) p.direct_name = true;
     const summary = pick(copy.summary);
     const body = [pick(copy.space_overview), pick(copy.neighborhood_overview), pick(copy.transit)].filter(Boolean).join("\n\n");
     if (name) p.public_name = name;
@@ -109,7 +107,7 @@ const loadProperties = async (): Promise<PublicProperty[]> => {
 };
 
 export const getProperties = cache(
-  unstable_cache(loadProperties, ["public-properties-v2"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
+  unstable_cache(loadProperties, ["public-properties-v3"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
 );
 
 export async function mapLimit<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
@@ -234,7 +232,9 @@ export const getReviews = cache(
 export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
   const city = cityFromName(p.address?.city);
   if (!city) return null;
-  const title = p.direct_name && p.public_name ? p.public_name.replace(/\s+/g, " ").trim() : homeName(p.public_name || p.name);
+  // Hospitable's Direct title is a copy of the Airbnb one, so every title is cleaned;
+  // a plain name ("Jungle Oasis") passes through unchanged.
+  const title = homeName(p.public_name || p.name);
   const lat = Number(p.address.coordinates?.latitude);
   const lng = Number(p.address.coordinates?.longitude);
   const { summary, highlights } = splitSummary(p.summary);
@@ -290,8 +290,8 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 
 // Airbnb titles are keyword lists ("*5BD Jungle Oasis *HotTub*BBQ*KingBed*Games*Garage").
 // On our own site a home goes by its name ("Jungle Oasis"); bedrooms, sleeps and
-// amenities sit under it (Michael Stead 11-25). To pick a different name, set the
-// Direct title in Hospitable: it's used as is.
+// amenities sit under it (Michael Stead 11-25). To pick a different name, set a
+// plain Direct title in Hospitable (no * | ! or emoji): it passes through as is.
 export function homeName(title: string): string {
   const parts = title
     .split(/[*|★☆✓✔⚡✨❤♥•✦‣!]+|\p{Extended_Pictographic}+/u)

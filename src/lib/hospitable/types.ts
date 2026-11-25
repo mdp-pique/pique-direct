@@ -13,8 +13,6 @@ export type HospitableAddress = {
 export type HospitableProperty = {
   id: string;
   public_name: string | null;
-  // Set by properties.ts when the name is the team's own direct-site name (used as is).
-  direct_name?: boolean;
   name: string;
   picture: string | null;
   address: HospitableAddress;
