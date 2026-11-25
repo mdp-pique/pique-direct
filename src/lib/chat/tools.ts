@@ -165,6 +165,9 @@ export async function runTool(name: string, input: Record<string, unknown>, ctx:
         home: p.title,
         nights: r.nights,
         lines: r.lines,
+        // What the stay price includes, for when a guest asks (cleaning, extra guests, discounts).
+        included_in_stay: r.details,
+        ...(r.savings ? { discount_included: r.savings } : {}),
         total: r.total,
         // The page opens with these dates picked; Book now there goes to checkout.
         book_url: `${propertyHref(p)}?checkin=${str(input.checkin)}&checkout=${str(input.checkout)}&adults=${partyOf(input).adults}`,

@@ -30,7 +30,7 @@ export default async function Stays() {
             <div className="flex items-end justify-between gap-4 border-b border-rule pb-4">
               <h2 className="font-display text-3xl">{CITIES[city].name}</h2>
               <Link href={`/stays/${city}`} className="text-sm font-medium text-larch hover:underline">
-                {list.length} {list.length === 1 ? "home" : "homes"} →
+                {list.length} {list.length === 1 ? "stay" : "stays"} →
               </Link>
             </div>
             <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

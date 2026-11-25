@@ -2,6 +2,7 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import fixtures from "../../data/fixtures/properties.json";
+import hiddenPhotos from "../../data/hidden-photos.json";
 import {
   getCalendar,
   getPropertyCopy,
@@ -69,6 +70,8 @@ const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
     const pick = (t?: { default: string | null; overrides?: Record<string, string | null | undefined> }) =>
       t ? (t.overrides?.direct ?? t.overrides?.airbnb ?? t.default ?? null) : null;
     const name = pick(copy.public_name);
+    // A direct-site name set in Hospitable is used as is; an Airbnb title gets cleaned (homeName).
+    if (copy.public_name?.overrides?.direct) p.direct_name = true;
     const summary = pick(copy.summary);
     const body = [pick(copy.space_overview), pick(copy.neighborhood_overview), pick(copy.transit)].filter(Boolean).join("\n\n");
     if (name) p.public_name = name;
@@ -189,12 +192,16 @@ export async function getPropertyById(id: string) {
   return (await getProperties()).find((p) => p.id === id) ?? null;
 }
 
+// Airbnb marketing tiles (QR codes, award badges, speed tests) stay on Airbnb only.
+const HIDDEN_PHOTOS = new Set(hiddenPhotos.files);
+const isHiddenPhoto = (url?: string | null) => Boolean(url && HIDDEN_PHOTOS.has(url.slice(url.lastIndexOf("/") + 1)));
+
 export const getImages = cache(async (id: string): Promise<PublicImage[]> => {
   const raw = hasHospitableToken()
     ? await getPropertyImages(id)
     : (FIXTURES.find((f) => f.property.id === id)?.images ?? []);
   return raw
-    .filter((img) => !isInstructionImage(img.caption))
+    .filter((img) => !isInstructionImage(img.caption) && !isHiddenPhoto(img.url) && !isHiddenPhoto(img.thumbnail_url))
     .sort((a, b) => a.order - b.order)
     .map((img) => ({ url: img.url, thumb: img.thumbnail_url, alt: cleanCaption(img.caption) }));
 });
@@ -226,7 +233,7 @@ export const getReviews = cache(
 export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
   const city = cityFromName(p.address?.city);
   if (!city) return null;
-  const title = (p.public_name || cleanTitle(p.name)).replace(/\s+/g, " ").trim();
+  const title = p.direct_name && p.public_name ? p.public_name.replace(/\s+/g, " ").trim() : homeName(p.public_name || p.name);
   const lat = Number(p.address.coordinates?.latitude);
   const lng = Number(p.address.coordinates?.longitude);
   const { summary, highlights } = splitSummary(p.summary);
@@ -279,6 +286,27 @@ function spaceTypeOf(p: HospitableProperty): SpaceType {
 }
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
+
+// Airbnb titles are keyword lists ("*5BD Jungle Oasis *HotTub*BBQ*KingBed*Games*Garage").
+// On our own site a home goes by its name ("Jungle Oasis"); bedrooms, sleeps and
+// amenities sit under it (Michael Stead 11-25). To pick a different name, set the
+// Direct title in Hospitable: it's used as is.
+export function homeName(title: string): string {
+  const parts = title
+    .split(/[*|★☆✓✔⚡✨❤♥•✦‣!]+|\p{Extended_Pictographic}+/u)
+    .map((s) => s.replace(/\(Lumos\)/i, "").replace(/\s+-\s+\d.*$/, "").replace(/\s+/g, " ").trim())
+    .filter((s) => s && !/^(brand\s+)?new$|^clean$|^sanitized$/i.test(s));
+  const tidy = (s: string) =>
+    s
+      .replace(/^(brand\s+)?new\s+/i, "")
+      .replace(/^\d+\s*(b|bd|br|bdr|bdrm|bed|bedroom)s?\b\.?\s*/i, "")
+      .replace(/\s+w\/.*$/i, "")
+      .trim();
+  let name = tidy(parts[0] ?? "");
+  // "Luxury 3BDRM*Chic Mountain Escape": the first part is only a size, the name comes next.
+  if (/^\w+\s+\d+\s*b\w*$/i.test(name) && parts[1]) name = tidy(parts[1]);
+  return name.length >= 3 ? name : cleanTitle(title);
+}
 
 function cleanTitle(name: string) {
   return name

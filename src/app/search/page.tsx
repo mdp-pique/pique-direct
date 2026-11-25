@@ -84,7 +84,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         </div>
       </div>
       <h1 className="font-display mt-12 text-4xl sm:text-5xl">
-        {results.length} {results.length === 1 ? "home" : "homes"} {liveChecked ? "available" : ""} in {where}
+        {results.length} {results.length === 1 ? "stay" : "stays"} {liveChecked ? "available" : ""} in {where}
       </h1>
       <p className="mt-2 text-basalt-soft">
         For {describeParty(party)}

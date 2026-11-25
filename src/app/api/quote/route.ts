@@ -23,5 +23,5 @@ export async function POST(req: Request) {
     party: { adults: body.adults, children: body.children, infants: body.infants, pets: body.pets },
   });
   if (!r.ok) return NextResponse.json({ error: r.error }, { status: r.status });
-  return NextResponse.json({ nights: r.nights, bookingUrl: r.bookingUrl, lines: r.lines, total: r.total });
+  return NextResponse.json({ nights: r.nights, bookingUrl: r.bookingUrl, lines: r.lines, savings: r.savings, instantBook: r.instantBook, total: r.total });
 }

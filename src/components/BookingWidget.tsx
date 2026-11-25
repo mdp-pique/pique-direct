@@ -7,7 +7,14 @@ import { GuestPicker } from "./GuestPicker";
 import { formatRange } from "./RangeCalendar";
 
 type Day = { date: string; available: boolean; price: number; minStay: number; noCheckin: boolean; noCheckout: boolean };
-type Quote = { nights: number; bookingUrl: string; lines: { label: string; amount: string; discount?: boolean }[]; total: string };
+type Quote = {
+  nights: number;
+  bookingUrl: string;
+  lines: { label: string; amount: string; discount?: boolean }[];
+  savings?: string;
+  instantBook?: boolean;
+  total: string;
+};
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -60,7 +67,13 @@ export function BookingWidget({
       .then(async (r) => {
         const j = await r.json();
         if (!r.ok) throw new Error(j.error ?? "Couldn't load availability");
-        if (live) setDays(new Map((j.days as Day[]).map((d) => [d.date, d])));
+        if (!live) return;
+        const list = j.days as Day[];
+        setDays(new Map(list.map((d) => [d.date, d])));
+        // Open on the first month with a free night, not on a fully booked one (Michael Stead 11-25).
+        const today = new Date().toISOString().slice(0, 10);
+        const firstFree = list.find((d) => d.date >= today && d.available && !d.noCheckin);
+        if (firstFree) setMonth((m) => (m === firstOfMonth(new Date()) && !new URLSearchParams(window.location.search).get("checkin") ? `${firstFree.date.slice(0, 7)}-01` : m));
       })
       .catch((e: Error) => live && setCalendarError(e.message));
     return () => {
@@ -247,6 +260,7 @@ export function BookingWidget({
               <span>{l.amount}</span>
             </div>
           ))}
+          {quote.savings && <p className="text-xs text-river">Includes {quote.savings} in discounts.</p>}
           <div className="flex justify-between border-t border-rule pt-2 text-base font-semibold">
             <span>Total</span>
             <span>{quote.total}</span>
@@ -268,6 +282,9 @@ export function BookingWidget({
         <p className="mt-5 rounded-full border border-rule py-3.5 text-center text-sm text-basalt-soft">
           {loading ? "Pricing your stay…" : checkin ? "Now pick your check-out day" : "Pick your check-in day"}
         </p>
+      )}
+      {quote && quote.instantBook === false && (
+        <p className="mt-3 text-center text-xs text-basalt-soft">Request to book: our team confirms your dates before the stay is booked.</p>
       )}
       <p className="mt-3 text-center text-xs text-mist">Secure checkout by Stripe. No platform service fee.</p>
     </div>

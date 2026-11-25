@@ -8,6 +8,19 @@ export const SITE = {
   locale: "en_CA",
   // Main line for calls and texts (from piquelifestyle.com).
   phone: { e164: "+17802300267", display: "1-780-230-0267" },
+  email: "info@piquepropertiesinc.com",
+  ownerSite: "https://piqueproperties.com",
+};
+
+// Track record, same figures and sources as the owner site (pique-management
+// src/content/stats.ts, Positioning Brief Oct 28). Exact counts; ratings to one
+// decimal, rounded down. Update both sites together.
+export const STATS = {
+  since: 2018,
+  stays: 11494, // Hospitable, Oct 2018 to Oct 14 2026
+  airbnb: { rating: 4.8, reviews: 9778 },
+  google: { rating: 4.8, reviews: 563 },
+  asOf: "October 2026",
 };
 
 export type CitySlug = "edmonton" | "canmore" | "calgary";

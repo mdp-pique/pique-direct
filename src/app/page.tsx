@@ -4,7 +4,10 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { Reveal } from "@/components/Reveal";
 import { getProperties, getReviews, mapLimit } from "@/lib/properties";
 import { SearchBar } from "@/components/SearchBar";
-import { CITIES, type CitySlug } from "@/lib/site";
+import { CITIES, STATS, type CitySlug } from "@/lib/site";
+
+// Ratings to one decimal, rounded down (same rule as the owner site).
+const rating = (r: number) => (Math.floor(r * 10) / 10).toFixed(1);
 
 export const revalidate = 3600;
 
@@ -63,13 +66,32 @@ export default async function Home() {
             Stay somewhere worth remembering.
           </h1>
           <p className="settle mt-6 max-w-xl text-base text-on-dark/85 sm:text-lg" style={{ animationDelay: "350ms" }}>
-            {properties.length > 2 ? `${properties.length} homes` : "Homes"} with private hot tubs, saunas and
+            {properties.length > 2 ? `${properties.length} stays` : "Stays"} with private hot tubs, saunas and
             mountain views, booked directly with the people who host them.
           </p>
           <div className="fade mt-8 max-w-4xl" style={{ animationDelay: "550ms" }}>
             <SearchBar variant="hero" />
           </div>
         </div>
+      </section>
+
+      {/* Track record (Michael Stead 11-25: show we're a real, established company). */}
+      <section aria-label="Our track record" className="border-b border-rule bg-snow-2">
+        <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-8 text-center sm:px-6 md:grid-cols-4">
+          {[
+            [`Since ${STATS.since}`, "hosting in Alberta"],
+            [STATS.stays.toLocaleString("en-CA"), "stays hosted"],
+            [`★ ${rating(STATS.airbnb.rating)}`, `${STATS.airbnb.reviews.toLocaleString("en-CA")} Airbnb reviews`],
+            [`★ ${rating(STATS.google.rating)}`, `${STATS.google.reviews.toLocaleString("en-CA")} Google reviews`],
+          ].map(([big, small]) => (
+            <div key={small}>
+              <dt className="sr-only">{small}</dt>
+              <dd className="font-display text-3xl">{big}</dd>
+              <dd className="mt-1 text-xs text-basalt-soft">{small}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="pb-4 text-center text-[11px] text-mist">As of {STATS.asOf}.</p>
       </section>
 
       {/* Real guest quotes: three, still. */}
@@ -107,7 +129,7 @@ export default async function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6 text-white">
                   <p className="text-xs text-white/70">
-                    {c.count} {c.count === 1 ? "home" : "homes"}
+                    {c.count} {c.count === 1 ? "stay" : "stays"}
                   </p>
                   <p className="font-display mt-1 text-4xl">{c.name}</p>
                 </div>

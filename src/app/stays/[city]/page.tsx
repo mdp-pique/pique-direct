@@ -56,7 +56,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       </p>
       {/* A plain-language fact line: easy for search snippets and AI answers to lift. */}
       <p className="mt-4 text-sm text-mist">
-        {list.length} {list.length === 1 ? "home" : "homes"} in {c.name}
+        {list.length} {list.length === 1 ? "stay" : "stays"} in {c.name}
         {hotTubs ? ` · ${hotTubs} with a hot tub` : ""}
         {petFriendly ? ` · ${petFriendly} pet friendly` : ""}
       </p>

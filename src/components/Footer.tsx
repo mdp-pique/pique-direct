@@ -23,11 +23,18 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold text-mist">Booking direct</p>
-          <p className="mt-3 text-sm text-basalt-soft">
-            Live prices and availability from our own calendar. Secure checkout, ID verification and damage
-            protection on every stay.
-          </p>
+          <p className="text-xs font-semibold text-mist">Talk to us</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li>
+              Call or text <a className="hover:text-river-2" href={`tel:${SITE.phone.e164}`}>{SITE.phone.display}</a>
+            </li>
+            <li>
+              <a className="hover:text-river-2" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+            </li>
+            <li className="pt-2">
+              <a className="hover:text-river-2" href={SITE.ownerSite}>Own a home? List it with us →</a>
+            </li>
+          </ul>
         </div>
       </div>
       <p className="pb-8 text-center text-xs text-mist">

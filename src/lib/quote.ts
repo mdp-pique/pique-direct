@@ -9,7 +9,14 @@ export type PricedStay = {
   ok: true;
   nights: number;
   bookingUrl: string;
+  // What guests see: the stay (rate + fees + discounts) and taxes.
   lines: { label: string; amount: string; discount?: boolean }[];
+  // The full breakdown, for Ask Pique when a guest asks what's in the price.
+  details: { label: string; amount: string; discount?: boolean }[];
+  // Total of any discount already in the stay price, e.g. a weekly discount.
+  savings?: string;
+  // false = request to book: the team approves before the stay is confirmed.
+  instantBook: boolean;
   total: string;
 };
 export type PriceError = { ok: false; status: number; error: string };
@@ -43,17 +50,32 @@ export async function priceStay(
       guests: { adults, children, infants, pets },
     });
     const f = q.financials;
+    // Shown the way Airbnb shows it (Michael Stead 11-25): one stay price with the
+    // nightly rate, cleaning, extra-guest and pet fees and any discount folded in,
+    // then taxes. Hospitable's checkout and records still keep every line.
+    // Amounts are in cents. The stay price is Hospitable's own "total without taxes".
+    const fees = f.fees.filter((x) => x.amount > 0);
+    const discounts = f.discounts.filter((x) => x.amount !== 0);
+    const taxes = f.taxes.filter((x) => x.amount > 0);
+    const stayCents = f.totals.total_without_taxes?.amount ?? f.totals.total.amount - taxes.reduce((a, x) => a + x.amount, 0);
+    const money = (c: number) => (c / 100).toLocaleString("en-CA", { style: "currency", currency: q.currency || property.currency || "CAD" });
+    const nightLabel = `${nights} ${nights === 1 ? "night" : "nights"}`;
     return {
       ok: true,
       nights,
       bookingUrl: q.booking_url,
       lines: [
-        { label: `${nights} ${nights === 1 ? "night" : "nights"}`, amount: f.totals.sub_total.formatted },
-        ...f.fees.filter((x) => x.amount > 0).map((x) => ({ label: x.label, amount: x.formatted })),
-        ...f.discounts.filter((x) => x.amount !== 0).map((x) => ({ label: x.label, amount: x.formatted, discount: true })),
-        ...f.taxes.filter((x) => x.amount > 0).map((x) => ({ label: x.label, amount: x.formatted })),
+        { label: nightLabel, amount: money(stayCents) },
+        ...taxes.map((x) => ({ label: x.label, amount: money(x.amount) })),
       ],
-      total: f.totals.total.formatted,
+      details: [
+        { label: `${nightLabel} (rate)`, amount: money(f.totals.sub_total.amount) },
+        ...fees.map((x) => ({ label: x.label, amount: money(x.amount) })),
+        ...discounts.map((x) => ({ label: x.label, amount: money(-Math.abs(x.amount)), discount: true })),
+      ],
+      savings: discounts.length ? money(discounts.reduce((a, x) => a + Math.abs(x.amount), 0)) : undefined,
+      instantBook: q.instant_book_applies === true,
+      total: money(f.totals.total.amount),
     };
   } catch (e) {
     // Hospitable rejects dates that break availability or stay rules with a 4xx.

@@ -13,6 +13,8 @@ export type HospitableAddress = {
 export type HospitableProperty = {
   id: string;
   public_name: string | null;
+  // Set by properties.ts when the name is the team's own direct-site name (used as is).
+  direct_name?: boolean;
   name: string;
   picture: string | null;
   address: HospitableAddress;
@@ -64,6 +66,8 @@ export type HospitableMoney = { amount: number; formatted: string; label: string
 
 export type HospitableQuote = {
   quote_id: string;
+  // false while the listing is request-to-book in Hospitable Direct.
+  instant_book_applies?: boolean;
   booking_url: string;
   currency: string;
   financials: {
@@ -73,6 +77,7 @@ export type HospitableQuote = {
     totals: {
       sub_total: HospitableMoney;
       total: HospitableMoney;
+      total_without_taxes?: HospitableMoney;
     };
   };
 };
