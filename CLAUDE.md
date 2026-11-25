@@ -1,6 +1,6 @@
 # Pique Direct
 
-Direct booking site for Pique Properties (Edmonton, Canmore, Calgary). Next.js App Router on Vercel, content and booking from the Hospitable Public API. Separate from the internal ops app (`mdp-pique/pique-ops`) on purpose: nothing here touches its database or automations.
+Direct booking site for Pique Properties, shown to guests as **Pique Lifestyle** (Michael Stead 11-25, MDP agreed; `SITE.name`, legal name Pique Properties Inc.; owners see Pique Properties at piqueproperties.com) (Edmonton, Canmore, Calgary). Next.js App Router on Vercel, content and booking from the Hospitable Public API. Separate from the internal ops app (`mdp-pique/pique-ops`) on purpose: nothing here touches its database or automations.
 
 ## How it works
 - `src/lib/hospitable/client.ts` is the only code that calls Hospitable (`HOSPITABLE_API_TOKEN`). Reads are cached (1 h content, 5 min calendar) under the `hospitable` tag; `POST /api/revalidate` (bearer `REVALIDATE_SECRET`) refreshes everything.
@@ -14,6 +14,7 @@ Direct booking site for Pique Properties (Edmonton, Canmore, Calgary). Next.js A
 - **Home names** (Michael Stead 11-25): the Airbnb title is a keyword list, so `homeName()` shows only the name ("*5BD Jungle Oasis *HotTub*BBQ" → "Jungle Oasis"); Hospitable's Direct title is a copy of the Airbnb one, so all titles go through it; a plain Direct title (no * | ! or emoji) passes through unchanged. Counts say "stays", not "homes" (units and whole-house listings are separate stays).
 - **Prices are shown like Airbnb** (Michael Stead 11-25): one stay price (rate + cleaning + extra-guest and pet fees + discounts, Hospitable's `total_without_taxes`), then taxes, then the total. Hospitable's checkout still shows its own breakdown. Ask Pique also gets the breakdown (`included_in_stay`) for when a guest asks.
 - **Hidden photos**: `data/hidden-photos.json` lists Airbnb marketing tiles (QR codes, Best in Edmonton badges, wifi speed tests) found by scanning every listing on 11-25; new ones added in Hospitable later aren't caught until it's re-run.
+- **Info and policy pages** (about, contact, faq, cancellation, house-rules, damage-protection, pets, terms, privacy, cookies, accessibility) all come from `src/content/info.ts`, rendered by `src/app/[info]/page.tsx`. Policies are Laurice's 10-19 answers, the rental agreement and Michael's Truvi wording (up to $700, included in the stay). The cancellation policy is Hospitable Direct's, read from its checkout 11-25: `src/lib/cancellation.ts` holds it and writes the line under Book now. Change both if Hospitable's changes. Ask Pique's prompt repeats the key policies.
 - Property URLs end in the first 8 characters of the Hospitable id; a renamed listing 308-redirects to its new slug. Don't change the slug format without redirects.
 - Every page must stay readable without JS (crawlers and AI assistants): animations only toggle classes on server-rendered content.
 

@@ -8,8 +8,8 @@ import { TRACKING_ENABLED } from "@/lib/track";
 // _HIGHLEVEL_TRACKING_ID, see lib/track.ts); until then the site sets no
 // tracking cookies, so there's nothing to ask. Tracking.tsx reads the choice.
 const KEY = "pique_consent";
-// No privacy page on this site yet (needed before tracking is switched on).
-const PRIVACY_HREF: string | null = null;
+// The guest privacy policy (src/content/info.ts).
+const PRIVACY_HREF: string | null = "/privacy";
 export type Consent = "accepted" | "declined";
 
 export function readConsent(): Consent | null {

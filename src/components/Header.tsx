@@ -25,7 +25,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="font-display text-[28px] leading-none tracking-tight" aria-label={SITE.name}>
+        <Link href="/" className="font-display whitespace-nowrap text-[22px] leading-none tracking-tight sm:text-[28px]" aria-label={SITE.name}>
           {SITE.shortName}
         </Link>
         <nav className="flex items-center gap-1 text-sm sm:gap-2">

@@ -10,7 +10,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "All stays",
-  description: "Every Pique Properties vacation rental in Edmonton, Canmore and Calgary, bookable directly.",
+  description: "Every Pique Lifestyle vacation rental in Edmonton, Canmore and Calgary, bookable directly.",
   alternates: { canonical: "/stays" },
 };
 

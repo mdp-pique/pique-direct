@@ -1,9 +1,12 @@
+// Guests see Pique Lifestyle; owners see Pique Properties (piqueproperties.com).
+// Michael Stead 11-25, MDP agreed. The company behind both is Pique Properties Inc.
 export const SITE = {
-  name: "Pique Properties",
-  shortName: "Pique",
+  name: "Pique Lifestyle",
+  shortName: "Pique Lifestyle",
+  legalName: "Pique Properties Inc.",
   tagline: "Design-forward stays in Edmonton, Canmore and Calgary",
   description:
-    "Book Pique Properties' homes directly: hot tubs, saunas, mountain views and city stays across Edmonton, Canmore and Calgary, with live pricing, no platform service fee and a local team on call.",
+    "Book Pique Lifestyle stays directly: hot tubs, saunas, mountain views and city stays across Edmonton, Canmore and Calgary, with live pricing, no platform service fee and a local team on call.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://piquelifestyle.com").replace(/\/$/, ""),
   locale: "en_CA",
   // Main line for calls and texts (from piquelifestyle.com).

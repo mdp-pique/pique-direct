@@ -6,7 +6,7 @@ import { Tracking } from "@/components/Tracking";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
-import { SITE } from "@/lib/site";
+import { SITE, STATS } from "@/lib/site";
 import "./globals.css";
 
 // Same type as the owner site (pique-management): Bodoni Moda for display, Geist for text.
@@ -49,6 +49,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             "@context": "https://schema.org",
             "@type": "Organization",
             name: SITE.name,
+            legalName: SITE.legalName,
+            telephone: SITE.phone.e164,
+            email: SITE.email,
+            foundingDate: String(STATS.since),
             url: SITE.url,
             description: SITE.description,
             areaServed: ["Edmonton", "Canmore", "Calgary"].map((c) => ({ "@type": "City", name: `${c}, Alberta` })),

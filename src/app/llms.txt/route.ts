@@ -1,3 +1,4 @@
+import { INFO_PAGES } from "@/content/info";
 import { propertyHref } from "@/lib/urls";
 import { SPACE_TYPES, getProperties } from "@/lib/properties";
 import { CITIES, type CitySlug, SITE } from "@/lib/site";
@@ -31,6 +32,7 @@ export async function GET() {
     }
     lines.push("");
   }
+  lines.push("## Policies and help", "", ...INFO_PAGES.map((p) => `- [${p.title}](${SITE.url}/${p.slug}): ${p.description}`), "");
   return new Response(lines.join("\n"), {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
   });

@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { cancellationLine } from "@/lib/cancellation";
 import { track } from "@/lib/track";
 import { DEFAULT_PARTY, describeParty, partyFromQuery, type Party } from "@/lib/party";
 import { GuestPicker } from "./GuestPicker";
@@ -281,6 +283,14 @@ export function BookingWidget({
       ) : (
         <p className="mt-5 rounded-full border border-rule py-3.5 text-center text-sm text-basalt-soft">
           {loading ? "Pricing your stay…" : checkin ? "Now pick your check-out day" : "Pick your check-in day"}
+        </p>
+      )}
+      {quote && checkin && (
+        <p className="mt-3 text-center text-xs text-basalt-soft">
+          {cancellationLine(checkin)}{" "}
+          <Link href="/cancellation" className="underline underline-offset-2">
+            Policy
+          </Link>
         </p>
       )}
       {quote && quote.instantBook === false && (
