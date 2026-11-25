@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import fixtures from "../../data/fixtures/properties.json";
 import hiddenPhotos from "../../data/hidden-photos.json";
+import licenceList from "../../data/licences.json";
 import {
   getCalendar,
   getPropertyCopy,
@@ -44,6 +45,8 @@ export type PublicProperty = {
   // Rounded to ~1 km so the exact address is never published.
   geo: { lat: number; lng: number } | null;
   heroImage: string | null;
+  // City short-term rental licence / permit number, when we have it.
+  licence: string | null;
   currency: string;
 };
 
@@ -65,6 +68,7 @@ const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
   // The team edits the Airbnb copy (MDP 11-04: use the Airbnb title and text as they are).
   // Prefer a direct override if one is ever set, then Airbnb, then the team default.
   await mapLimit(list, 8, async (p) => {
+    p.licence = findLicence(p.description, p.summary);
     const copy = await getPropertyCopy(p.id);
     if (!copy) return;
     const pick = (t?: { default: string | null; overrides?: Record<string, string | null | undefined> }) =>
@@ -74,6 +78,7 @@ const rawProperties = cache(async (): Promise<HospitableProperty[]> => {
     const body = [pick(copy.space_overview), pick(copy.neighborhood_overview), pick(copy.transit)].filter(Boolean).join("\n\n");
     if (name) p.public_name = name;
     if (summary) p.summary = summary;
+    p.licence = p.licence ?? findLicence(body, pick(copy.summary));
     if (body) p.description = body;
   });
   return list;
@@ -107,7 +112,7 @@ const loadProperties = async (): Promise<PublicProperty[]> => {
 };
 
 export const getProperties = cache(
-  unstable_cache(loadProperties, ["public-properties-v3"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
+  unstable_cache(loadProperties, ["public-properties-v4"], { revalidate: 3600, tags: [HOSPITABLE_TAG] }),
 );
 
 export async function mapLimit<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
@@ -262,6 +267,7 @@ export function toPublicProperty(p: HospitableProperty): PublicProperty | null {
     childrenAllowed: p.house_rules?.children_allowed !== false,
     geo: Number.isFinite(lat) && Number.isFinite(lng) ? { lat: round2(lat), lng: round2(lng) } : null,
     heroImage: null,
+    licence: LICENCES[p.id] ?? p.licence ?? null,
     currency: p.currency || "CAD",
   };
 }
@@ -287,6 +293,18 @@ function spaceTypeOf(p: HospitableProperty): SpaceType {
 }
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
+
+// City short-term rental licence or permit number (public; Airbnb shows it too).
+// The team types it into some listings ("**License Number: RES-09880");
+// data/licences.json fills in or corrects the rest.
+const LICENCES: Record<string, string> = licenceList.licences;
+export function findLicence(...texts: (string | null | undefined)[]): string | null {
+  for (const t of texts) {
+    const m = t?.match(/\b(?:licen[cs]e|permit|registration)\s*(?:number|no\.?|#)?\s*[:#]?\s*([A-Z]{0,6}-?\d[A-Z0-9-]{3,})/i);
+    if (m) return m[1].toUpperCase();
+  }
+  return null;
+}
 
 // Airbnb titles are keyword lists ("*5BD Jungle Oasis *HotTub*BBQ*KingBed*Games*Garage").
 // On our own site a home goes by its name ("Jungle Oasis"); bedrooms, sleeps and

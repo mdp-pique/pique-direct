@@ -1,0 +1,4 @@
+{
+  "_note": "City short-term rental licence / permit number per Hospitable property id, shown on the stay page. Only needed when the listing text doesn't already say 'Licence Number: ...' (the site reads that itself). An entry here wins over the listing text.",
+  "licences": {}
+}

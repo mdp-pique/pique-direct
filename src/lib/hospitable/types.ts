@@ -13,6 +13,8 @@ export type HospitableAddress = {
 export type HospitableProperty = {
   id: string;
   public_name: string | null;
+  // Set by properties.ts from the listing text before it is replaced by the Airbnb copy.
+  licence?: string | null;
   name: string;
   picture: string | null;
   address: HospitableAddress;

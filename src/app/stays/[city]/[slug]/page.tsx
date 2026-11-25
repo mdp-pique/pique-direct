@@ -200,6 +200,7 @@ export default async function PropertyPage({ params }: Params) {
               <li>{p.petsAllowed ? "Pets welcome (a nightly pet fee applies)." : "No pets, please."}</li>
               <li>No smoking and no parties.</li>
               <li>ID verification and a short rental agreement before your door code is sent.</li>
+              {p.licence && <li>{p.cityName} short-term rental licence: {p.licence}</li>}
             </ul>
           </section>
 
